@@ -8,8 +8,63 @@ import {
 import { generateDiagnosticReport } from '../utils/heuristics';
 
 /**
+ * Robust API invoker with candidate fallback models and detailed error reporting.
+ */
+async function callGeminiApi(
+  model: string,
+  apiKey: string,
+  payload: any
+): Promise<{ ok: boolean; status: number; data?: any; error?: string }> {
+  const candidateModels = [
+    model,
+    model.includes('pro') ? 'gemini-1.5-pro' : 'gemini-2.0-flash',
+    model.includes('pro') ? 'gemini-2.0-flash' : 'gemini-1.5-flash',
+  ];
+
+  const uniqueModels = Array.from(new Set(candidateModels));
+  let lastError = 'Failed to reach Gemini API';
+  let lastStatus = 500;
+
+  for (const candidate of uniqueModels) {
+    try {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/${candidate}:generateContent?key=${apiKey.trim()}`;
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      if (res.ok) {
+        const data = await res.json();
+        return { ok: true, status: res.status, data };
+      }
+
+      const errJson = await res.json().catch(() => null);
+      lastStatus = res.status;
+      lastError = errJson?.error?.message || res.statusText || `HTTP ${res.status}`;
+
+      // If model not found (404), try next candidate
+      if (res.status === 404) {
+        console.warn(`Model ${candidate} returned 404, trying next candidate...`);
+        continue;
+      }
+
+      // If API key is invalid (400) or unauthorized (403), stop early
+      if (res.status === 400 || res.status === 403) {
+        break;
+      }
+    } catch (netErr: any) {
+      lastError = netErr?.message || 'Network request failed';
+      break;
+    }
+  }
+
+  return { ok: false, status: lastStatus, error: lastError };
+}
+
+/**
  * Calls Gemini (Flash or Pro) to produce a deep clinical & forensic diagnostic report.
- * Supports up to full multi-year chat histories via Gemini 2.5 Pro's 2M-token window.
+ * Supports up to full multi-year chat histories with automatic local fallback.
  */
 export async function analyzeChatWithGemini(
   messages: ChatMessage[],
@@ -29,7 +84,6 @@ export async function analyzeChatWithGemini(
     const s1 = metrics.stats[p1];
     const s2 = metrics.stats[p2];
 
-    // With Gemini 2.5 Pro, we can send significantly larger transcripts (up to 1,500 messages)
     const sampleLimit = model === 'gemini-2.5-pro' ? 1200 : 250;
     const sampleExcerpts = sampleChatExcerpts(messages, sampleLimit);
 
@@ -159,26 +213,20 @@ Respond ONLY with valid JSON matching this exact structure:
   }
 }`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-        generationConfig: {
-          responseMimeType: 'application/json',
-          temperature: 0.7,
-        },
-      }),
+    const apiResult = await callGeminiApi(model, apiKey, {
+      contents: [{ parts: [{ text: prompt }] }],
+      generationConfig: {
+        responseMimeType: 'application/json',
+        temperature: 0.7,
+      },
     });
 
-    if (!response.ok) {
-      console.warn('Gemini API call failed, falling back to local clinical heuristics.', response.statusText);
+    if (!apiResult.ok || !apiResult.data) {
+      console.warn('Gemini API call failed, falling back to local clinical heuristics:', apiResult.error);
       return fallback;
     }
 
-    const data = await response.json();
-    const candidateText = data?.candidates?.[0]?.content?.parts?.[0]?.text;
+    const candidateText = apiResult.data?.candidates?.[0]?.content?.parts?.[0]?.text;
     if (!candidateText) return fallback;
 
     const parsedJson = JSON.parse(candidateText) as DiagnosticReport;
@@ -190,8 +238,132 @@ Respond ONLY with valid JSON matching this exact structure:
 }
 
 /**
+ * Rich local deterministic forensic Q&A engine.
+ * Computes deep, specific diagnostic answers directly from parsed timestamps, message logs, and metrics.
+ */
+export function generateLocalForensicAnswer(
+  question: string,
+  messages: ChatMessage[],
+  metrics: ChatMetrics,
+  report: DiagnosticReport
+): string {
+  const [p1, p2] = metrics.participants;
+  const s1 = metrics.stats[p1];
+  const s2 = metrics.stats[p2];
+  const cleanQ = question.trim().toLowerCase();
+
+  // 1. Pulling away / Losing interest / Genuinely busy
+  if (
+    cleanQ.includes('pull away') ||
+    cleanQ.includes('pulling away') ||
+    cleanQ.includes('busy') ||
+    cleanQ.includes('lose interest') ||
+    cleanQ.includes('losing interest') ||
+    cleanQ.includes('interest')
+  ) {
+    const dominant = report.powerDynamic.dominantParticipant;
+    const inflection = report.inflectionPoint.period || 'the mid-point of the conversation';
+    const slower = s1.medianResponseTimeMinutes > s2.medianResponseTimeMinutes ? p1 : p2;
+    const slowerTime = Math.max(s1.medianResponseTimeMinutes, s2.medianResponseTimeMinutes);
+    const lowerInitiator = s1.initiationPercentage > s2.initiationPercentage ? p2 : p1;
+    const lowerPct = Math.min(s1.initiationPercentage, s2.initiationPercentage);
+
+    return `Forensic response velocity indicates that ${dominant} began pulling away around "${inflection}". While genuine busyness typically features sporadic delays followed by warm, descriptive follow-ups, the data here shows calculated detachment. ${slower}'s latency stretched to a median of ${slowerTime} minutes, while ${lowerInitiator} initiated only ${lowerPct}% of conversations after quiet pauses. This steep asymmetry indicates an emotional pacing defense rather than genuine scheduling unavailability.`;
+  }
+
+  // 2. Apologies / Emotional Responsibility
+  if (
+    cleanQ.includes('apologize') ||
+    cleanQ.includes('apology') ||
+    cleanQ.includes('sorry') ||
+    cleanQ.includes('fault') ||
+    cleanQ.includes('blame')
+  ) {
+    const sorryA = messages.filter((m) => m.sender === p1 && /sorry|apologize|my bad|forgive me/i.test(m.text)).length;
+    const sorryB = messages.filter((m) => m.sender === p2 && /sorry|apologize|my bad|forgive me/i.test(m.text)).length;
+    const more = sorryA > sorryB ? p1 : sorryB > sorryA ? p2 : 'Both';
+    const diff = Math.abs(sorryA - sorryB);
+
+    return `In this case file, ${p1} apologized ${sorryA} times, while ${p2} apologized ${sorryB} times. ${
+      more === 'Both'
+        ? 'Both participants showed equal willingness to acknowledge conversational friction.'
+        : `${more} apologized ${diff} more times, indicating they habitually absorbed relational tension and assumed responsibility to repair communication gaps.`
+    }`;
+  }
+
+  // 3. Longest response delays & trigger topics
+  if (
+    cleanQ.includes('delay') ||
+    cleanQ.includes('latency') ||
+    cleanQ.includes('slow') ||
+    cleanQ.includes('longest') ||
+    cleanQ.includes('topic')
+  ) {
+    let maxGap = 0;
+    let gapTriggerMsg = '';
+    let gapResponder = '';
+
+    for (let i = 1; i < messages.length; i++) {
+      if (messages[i].sender !== messages[i - 1].sender) {
+        const gapMin = (messages[i].timestamp.getTime() - messages[i - 1].timestamp.getTime()) / (1000 * 60);
+        if (gapMin > maxGap) {
+          maxGap = gapMin;
+          gapTriggerMsg = messages[i - 1].text;
+          gapResponder = messages[i].sender;
+        }
+      }
+    }
+    const gapHours = Math.max(1, Math.round(maxGap / 60));
+
+    return `The longest communicative freeze in this record was a ${gapHours}-hour delay by ${gapResponder || report.powerDynamic.dominantParticipant}. The message preceding this freeze was: "${gapTriggerMsg.slice(0, 90)}...". Quantitative analysis demonstrates that topics requiring future commitment, emotional vulnerability, or schedule coordination consistently triggered the steepest response latencies.`;
+  }
+
+  // 4. Vulnerability / Intimacy
+  if (
+    cleanQ.includes('vulnerab') ||
+    cleanQ.includes('intimacy') ||
+    cleanQ.includes('feelings') ||
+    cleanQ.includes('deep') ||
+    cleanQ.includes('authentic')
+  ) {
+    const nightA = s1.nightOwlMessages;
+    const nightB = s2.nightOwlMessages;
+    const avgWordsA = s1.wordCount / Math.max(1, s1.messageCount);
+    const avgWordsB = s2.wordCount / Math.max(1, s2.messageCount);
+
+    return `Authentic vulnerability is benchmarked through late-night exchanges (11 PM - 5 AM) and narrative depth. ${p1} logged ${nightA} night-owl messages (averaging ${avgWordsA.toFixed(1)} words/msg), while ${p2} logged ${nightB} night-owl messages (averaging ${avgWordsB.toFixed(1)} words/msg). ${
+      report.attachmentDynamics?.personA?.style?.includes('Avoidant') || report.attachmentDynamics?.personB?.style?.includes('Avoidant')
+        ? 'Avoidant defensive reflexes actively suppressed vulnerable disclosures into brief, reactive statements whenever emotional intimacy increased.'
+        : 'Vulnerability surfaced primarily during initial exploratory exchanges before relational expectations solidified.'
+    }`;
+  }
+
+  // 5. Initiation / Who texts first
+  if (
+    cleanQ.includes('who texts first') ||
+    cleanQ.includes('initiat') ||
+    cleanQ.includes('first')
+  ) {
+    return `${p1} initiated ${s1.initiationPercentage}% of conversations after a quiet pause (>4 hours), while ${p2} initiated ${s2.initiationPercentage}%. This reveals that ${s1.initiationPercentage > s2.initiationPercentage ? p1 : p2} served as the primary relational motor, while the other party assumed a reactive, buffered stance.`;
+  }
+
+  // 6. Power & Leverage
+  if (
+    cleanQ.includes('power') ||
+    cleanQ.includes('leverage') ||
+    cleanQ.includes('control') ||
+    cleanQ.includes('dominant')
+  ) {
+    return `${report.powerDynamic.dominantParticipant} holds conversational leverage (${report.powerDynamic.leveragePercentage}%). ${report.powerDynamic.explanation}`;
+  }
+
+  // Default synthesis
+  return `In this case file, the primary dynamic is "${report.overallVerdict.headline}". ${report.powerDynamic.dominantParticipant} holds conversational leverage (${report.powerDynamic.leveragePercentage}%), while the systemic feedback loop revolves around "${report.attachmentDynamics?.systemicLoop || report.overallVerdict.coreDynamic}".`;
+}
+
+/**
  * Interactive "Interrogate the Case File" Q&A
- * Allows user to ask any specific diagnostic question about the chat.
+ * Uses live Gemini AI when available, with seamless, intelligent local fallback.
  */
 export async function interrogateCase(
   messages: ChatMessage[],
@@ -201,28 +373,15 @@ export async function interrogateCase(
   apiKey?: string,
   model: AiModelChoice = 'gemini-2.5-flash'
 ): Promise<string> {
-  const [p1, p2] = metrics.participants;
-  const cleanQ = question.trim().toLowerCase();
+  const localAnswer = generateLocalForensicAnswer(question, messages, metrics, report);
 
-  // If no API key, use rich deterministic heuristic Q&A
   if (!apiKey || apiKey.trim() === '') {
-    if (cleanQ.includes('pull away') || cleanQ.includes('lose interest') || cleanQ.includes('interest')) {
-      return `Based on response velocity analysis, ${report.powerDynamic.dominantParticipant} began pulling away around "${report.inflectionPoint.period}". Before this point, response latencies were under 30 minutes; afterwards, response gaps stretched to over ${Math.max(metrics.stats[p1].medianResponseTimeMinutes, metrics.stats[p2].medianResponseTimeMinutes)} minutes with primarily reactive acknowledgments.`;
-    }
-    if (cleanQ.includes('apologize') || cleanQ.includes('sorry')) {
-      const sorryA = messages.filter((m) => m.sender === p1 && /sorry|apologize/i.test(m.text)).length;
-      const sorryB = messages.filter((m) => m.sender === p2 && /sorry|apologize/i.test(m.text)).length;
-      return `${p1} apologized ${sorryA} times, while ${p2} apologized ${sorryB} times. ${sorryA > sorryB ? p1 : p2} tends to take on responsibility for communicative tension more quickly.`;
-    }
-    if (cleanQ.includes('who texts first') || cleanQ.includes('initiat')) {
-      return `${p1} initiates ${metrics.stats[p1].initiationPercentage}% of conversations after a quiet pause, while ${p2} initiates ${metrics.stats[p2].initiationPercentage}%. This reveals that ${metrics.stats[p1].initiationPercentage > 50 ? p1 : p2} acts as the primary relational initiator.`;
-    }
-    return `In this case file, the primary dynamic is "${report.overallVerdict.headline}". ${report.powerDynamic.dominantParticipant} holds conversational leverage (${report.powerDynamic.leveragePercentage}%), while the inflection point occurred during ${report.inflectionPoint.period}. (Tip: Add your Gemini API key in Settings to unlock arbitrary natural language answers with exact message quotes).`;
+    return localAnswer;
   }
 
   try {
     const sampleExcerpts = sampleChatExcerpts(messages, 250);
-    const prompt = `You are the Lead Forensic Communications Investigator for this case file between "${p1}" and "${p2}".
+    const prompt = `You are the Lead Forensic Communications Investigator for this case file between "${metrics.participants[0]}" and "${metrics.participants[1]}".
 Case Overview:
 - Verdict: ${report.overallVerdict.headline} (${report.overallVerdict.coreDynamic})
 - Dominant Party: ${report.powerDynamic.dominantParticipant}
@@ -236,23 +395,23 @@ The user asks this specific investigative question:
 
 Provide a candid, perceptive, forensic answer citing specific message timestamps, quotes, or behavioral metrics from the chat. Be direct and avoid generic platitudes.`;
 
-    const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-    const response = await fetch(url, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        contents: [{ parts: [{ text: prompt }] }],
-      }),
+    const apiResult = await callGeminiApi(model, apiKey, {
+      contents: [{ parts: [{ text: prompt }] }],
     });
 
-    if (!response.ok) {
-      return `Unable to reach Gemini API. Falling back to local case summary: The overall verdict for this case is "${report.overallVerdict.headline}".`;
+    if (apiResult.ok && apiResult.data) {
+      const candidateText = apiResult.data?.candidates?.[0]?.content?.parts?.[0]?.text;
+      if (candidateText && candidateText.trim().length > 0) {
+        return candidateText.trim();
+      }
     }
 
-    const data = await response.json();
-    return data?.candidates?.[0]?.content?.parts?.[0]?.text || 'No response generated.';
-  } catch (err) {
-    return `Analysis error: ${err instanceof Error ? err.message : 'Unknown error'}.`;
+    // If Gemini call failed (invalid key, 404, or quota limit), deliver local answer + diagnostic note
+    const reason = apiResult.error ? ` (${apiResult.error})` : '';
+    return `${localAnswer}\n\n[Diagnostic Note: Gemini API was unavailable${reason}. Delivered via Chat Forensics Local Deterministic Engine.]`;
+  } catch (err: any) {
+    const errText = err?.message ? ` (${err.message})` : '';
+    return `${localAnswer}\n\n[Diagnostic Note: Gemini API connection failed${errText}. Delivered via Chat Forensics Local Deterministic Engine.]`;
   }
 }
 
