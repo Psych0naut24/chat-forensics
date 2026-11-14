@@ -5,9 +5,14 @@ import { SAMPLE_CHATS, SampleChatOption } from '../data/sampleChats';
 interface ChatInputProps {
   onAnalyze: (rawText: string, scrubPII: boolean) => void;
   isLoading: boolean;
+  apiKeyConfigured?: boolean;
 }
 
-export const ChatInput: React.FC<ChatInputProps> = ({ onAnalyze, isLoading }) => {
+export const ChatInput: React.FC<ChatInputProps> = ({
+  onAnalyze,
+  isLoading,
+  apiKeyConfigured = false,
+}) => {
   const [activeTab, setActiveTab] = useState<'upload' | 'paste'>('upload');
   const [pastedText, setPastedText] = useState('');
   const [scrubPII, setScrubPII] = useState(true);
@@ -71,20 +76,31 @@ export const ChatInput: React.FC<ChatInputProps> = ({ onAnalyze, isLoading }) =>
 
         {/* API Guidance Callout */}
         <div className="max-w-xl mx-auto p-3 rounded-xl bg-obsidian-900/80 border border-obsidian-800 text-xs text-slate-300 flex items-center justify-between gap-3 text-left">
-          <div className="flex items-center gap-2">
-            <span className="w-2 h-2 rounded-full bg-amber-450 animate-pulse" />
-            <span className="text-[11px] text-slate-300">
-              <strong>Deep AI Mode:</strong> Add your free Gemini API key in <em>API Settings</em> (top right) to unlock full relational psychological synthesis and interactive Q&A.
-            </span>
-          </div>
-          <a
-            href="https://aistudio.google.com/app/apikey"
-            target="_blank"
-            rel="noreferrer"
-            className="text-[11px] font-mono text-amber-400 hover:text-amber-300 underline underline-offset-2 shrink-0 font-semibold"
-          >
-            Get Free Key &rarr;
-          </a>
+          {apiKeyConfigured ? (
+            <div className="flex items-center gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="text-[11px] text-emerald-300 font-mono">
+                <strong>Gemini AI Active:</strong> Deep clinical relational analysis & interactive Q&A enabled.
+              </span>
+            </div>
+          ) : (
+            <>
+              <div className="flex items-center gap-2">
+                <span className="w-2 h-2 rounded-full bg-amber-450 animate-pulse" />
+                <span className="text-[11px] text-slate-300">
+                  <strong>Deep AI Mode:</strong> Add your free Gemini API key in <em>API Settings</em> (top right) to unlock full relational psychological synthesis and interactive Q&A.
+                </span>
+              </div>
+              <a
+                href="https://aistudio.google.com/app/apikey"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[11px] font-mono text-amber-400 hover:text-amber-300 underline underline-offset-2 shrink-0 font-semibold"
+              >
+                Get Free Key &rarr;
+              </a>
+            </>
+          )}
         </div>
       </div>
 

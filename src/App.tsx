@@ -118,7 +118,11 @@ export const App: React.FC = () => {
             onReset={handleReset}
           />
         ) : (
-          <ChatInput onAnalyze={handleAnalyze} isLoading={isLoading} />
+          <ChatInput
+            onAnalyze={handleAnalyze}
+            isLoading={isLoading}
+            apiKeyConfigured={!!apiKey && apiKey.trim().length > 0}
+          />
         )}
       </main>
 
