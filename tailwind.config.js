@@ -9,18 +9,19 @@ export default {
     extend: {
       colors: {
         obsidian: {
-          950: '#070A10',
-          900: '#0D111A',
-          850: '#121824',
-          800: '#182132',
-          700: '#222E44',
+          950: 'var(--color-base)',
+          900: 'var(--color-surface)',
+          850: 'var(--color-card)',
+          800: 'var(--color-border)',
+          750: 'var(--color-border-subtle)',
+          700: 'var(--color-border-subtle)',
           600: '#32425E',
         },
         amber: {
-          450: '#FBBF24',
-          500: '#F59E0B',
-          550: '#EAB308',
-          600: '#D97706',
+          450: 'var(--color-accent-text)',
+          500: 'var(--color-accent)',
+          550: 'var(--color-accent-hover)',
+          600: 'var(--color-accent-hover)',
         }
       },
       fontFamily: {

@@ -78,9 +78,26 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 Get free key &rarr;
               </a>
             </div>
+
+            {Boolean((import.meta as any).env?.VITE_GEMINI_API_KEY) && (
+              <div className="p-2.5 rounded-xl bg-emerald-500/15 border border-emerald-500/30 text-emerald-300 text-xs font-mono flex items-center justify-between">
+                <span className="flex items-center gap-1.5">
+                  <Check className="w-3.5 h-3.5 text-emerald-400" />
+                  Netlify Environment Key Active
+                </span>
+                <span className="text-[10px] uppercase font-bold text-emerald-400 bg-emerald-500/20 px-2 py-0.5 rounded">
+                  Connected
+                </span>
+              </div>
+            )}
+
             <input
               type="password"
-              placeholder="AIzaSy..."
+              placeholder={
+                (import.meta as any).env?.VITE_GEMINI_API_KEY
+                  ? '•••••••••••••••• (Using Netlify Key)'
+                  : 'AIzaSy...'
+              }
               value={inputKey}
               onChange={(e) => setInputKey(e.target.value)}
               className="w-full px-3.5 py-2.5 rounded-xl bg-obsidian-950 border border-obsidian-700 text-sm text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-amber-500/80 font-mono transition"

@@ -139,4 +139,9 @@ export interface DiagnosticReport {
 
 export type ToneMode = 'candid' | 'constructive' | 'analytical';
 export type AiModelChoice = 'gemini-2.5-flash' | 'gemini-2.5-pro';
-export type AppTheme = 'noir-amber' | 'cyber-neon' | 'linear-luxury' | 'classified-dossier';
+export type AppTheme =
+  | 'noir-amber'
+  | 'cyber-neon'
+  | 'linear-luxury'
+  | 'classified-dossier'
+  | 'clean-light';

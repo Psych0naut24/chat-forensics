@@ -106,17 +106,24 @@ export const App: React.FC = () => {
     setIsLoading(false);
   };
 
+  // Synchronize data-theme on document element whenever theme changes
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
+
   const getThemeClasses = (t: AppTheme) => {
     switch (t) {
+      case 'clean-light':
+        return 'bg-[#F8FAFC] text-slate-900 bg-grid-pattern selection:bg-indigo-500/20 selection:text-indigo-600';
       case 'cyber-neon':
-        return 'bg-[#050811] bg-grid-pattern selection:bg-cyan-500/20 selection:text-cyan-300';
+        return 'bg-[#040714] text-slate-100 bg-grid-pattern selection:bg-cyan-500/20 selection:text-cyan-300';
       case 'linear-luxury':
-        return 'bg-[#09090B] bg-grid-pattern selection:bg-emerald-500/20 selection:text-emerald-300';
+        return 'bg-[#09090B] text-slate-100 bg-grid-pattern selection:bg-emerald-500/20 selection:text-emerald-300';
       case 'classified-dossier':
-        return 'bg-[#0D0F14] bg-grid-pattern selection:bg-red-500/20 selection:text-red-300 font-mono';
+        return 'bg-[#0D0F14] text-slate-100 bg-grid-pattern selection:bg-red-500/20 selection:text-red-300 font-mono';
       case 'noir-amber':
       default:
-        return 'bg-[#070A10] bg-grid-pattern selection:bg-amber-500/20 selection:text-amber-300';
+        return 'bg-[#070A10] text-slate-100 bg-grid-pattern selection:bg-amber-500/20 selection:text-amber-300';
     }
   };
 

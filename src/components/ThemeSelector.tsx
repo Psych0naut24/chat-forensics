@@ -49,6 +49,14 @@ const THEMES: ThemeOption[] = [
     borderAccent: 'border-red-500/40',
     desc: 'Deep archival gray with red ink stamps & monospace courier',
   },
+  {
+    id: 'clean-light',
+    name: 'Clean Light',
+    badge: 'Light Mode',
+    dotColor: 'bg-indigo-600',
+    borderAccent: 'border-indigo-500/40',
+    desc: 'Crisp editorial white with electric indigo accents & modern SaaS layout',
+  },
 ];
 
 export const ThemeSelector: React.FC<ThemeSelectorProps> = ({ currentTheme, onSelectTheme }) => {
