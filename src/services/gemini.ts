@@ -8,19 +8,17 @@ import {
 import { generateDiagnosticReport } from '../utils/heuristics';
 
 /**
- * Robust API invoker with candidate fallback models and detailed error reporting.
+ * Robust API invoker with candidate fallback models, automatic retry on transient spikes, and detailed error reporting.
  */
 async function callGeminiApi(
   model: string,
   apiKey: string,
   payload: any
 ): Promise<{ ok: boolean; status: number; data?: any; error?: string }> {
+  // If the user selected Flash, fallback to Pro if Flash is overwhelmed; if Pro selected, fallback to Flash
   const candidateModels = [
     model,
-    model.includes('pro') ? 'gemini-3.8-pro' : 'gemini-3.8-flash',
-    model.includes('pro') ? 'gemini-3.5-pro' : 'gemini-3.5-flash',
-    model.includes('pro') ? 'gemini-3.0-pro' : 'gemini-3.0-flash',
-    'gemini-3.8-flash',
+    model === 'gemini-3.8-flash' ? 'gemini-3.8-pro' : 'gemini-3.8-flash',
   ];
 
   const uniqueModels = Array.from(new Set(candidateModels));
@@ -29,48 +27,60 @@ async function callGeminiApi(
 
   for (let i = 0; i < uniqueModels.length; i++) {
     const candidate = uniqueModels[i];
-    try {
-      const url = `https://generativelanguage.googleapis.com/v1beta/models/${candidate}:generateContent?key=${apiKey.trim()}`;
-      const res = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload),
-      });
 
-      if (res.ok) {
-        const data = await res.json();
-        return { ok: true, status: res.status, data };
+    // Allow up to 2 attempts per model with a brief backoff for temporary 503/429 spikes
+    for (let attempt = 0; attempt < 2; attempt++) {
+      if (attempt > 0) {
+        // Wait 1.2s before retry on transient high-demand
+        await new Promise((res) => setTimeout(res, 1200));
       }
 
-      const errJson = await res.json().catch(() => null);
-      lastStatus = res.status;
-      lastError = errJson?.error?.message || res.statusText || `HTTP ${res.status}`;
+      try {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/${candidate}:generateContent?key=${apiKey.trim()}`;
+        const res = await fetch(url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload),
+        });
 
-      // If Google recommends a specific model dynamically, add it to candidates and try it!
-      const recMatch = lastError.match(/models\/(gemini-[a-zA-Z0-9.-]+)/);
-      if (recMatch && recMatch[1] && !uniqueModels.includes(recMatch[1])) {
-        uniqueModels.push(recMatch[1]);
-        continue;
-      }
+        if (res.ok) {
+          const data = await res.json();
+          return { ok: true, status: res.status, data };
+        }
 
-      // If model not found or deprecated, try next candidate
-      if (
-        res.status === 404 ||
-        lastError.includes('no longer available') ||
-        lastError.includes('not found') ||
-        lastError.includes('not supported')
-      ) {
-        console.warn(`Model ${candidate} unavailable: ${lastError}. Trying next candidate...`);
-        continue;
-      }
+        const errJson = await res.json().catch(() => null);
+        lastStatus = res.status;
+        lastError = errJson?.error?.message || res.statusText || `HTTP ${res.status}`;
 
-      // If API key is rejected as invalid (and not a model issue), break
-      if ((res.status === 400 && lastError.includes('API_KEY_INVALID')) || res.status === 403) {
+        // If Google recommends a specific model dynamically, add it to candidates and try it!
+        const recMatch = lastError.match(/models\/(gemini-[a-zA-Z0-9.-]+)/);
+        if (recMatch && recMatch[1] && !uniqueModels.includes(recMatch[1])) {
+          uniqueModels.push(recMatch[1]);
+        }
+
+        // If invalid API key, no point in retrying or trying other models
+        if ((res.status === 400 && lastError.includes('API_KEY_INVALID')) || res.status === 403) {
+          return { ok: false, status: lastStatus, error: lastError };
+        }
+
+        // If it's a 503 high demand or 429 rate limit, attempt 0 will retry after 1.2s
+        const isTransient =
+          res.status === 503 ||
+          res.status === 429 ||
+          lastError.toLowerCase().includes('high demand') ||
+          lastError.includes('RESOURCE_EXHAUSTED');
+
+        if (isTransient && attempt === 0) {
+          console.warn(`[Gemini API] Temporary 503 high demand on ${candidate}. Retrying in 1.2s...`);
+          continue;
+        }
+
+        // If attempt 1 also failed with high demand or if model is 404, break attempt loop to try next model
+        break;
+      } catch (netErr: any) {
+        lastError = netErr?.message || 'Network request failed';
         break;
       }
-    } catch (netErr: any) {
-      lastError = netErr?.message || 'Network request failed';
-      break;
     }
   }
 
