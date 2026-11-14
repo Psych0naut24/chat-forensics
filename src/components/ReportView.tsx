@@ -26,6 +26,9 @@ import {
 } from '../types';
 import { ShareableCardModal } from './ShareableCardModal';
 import { CaseInterrogator } from './CaseInterrogator';
+import { RadarScorecard } from './RadarScorecard';
+import { ActivityCharts } from './ActivityCharts';
+import { ChatTranscriptDrawer } from './ChatTranscriptDrawer';
 
 interface ReportViewProps {
   report: DiagnosticReport;
@@ -45,6 +48,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
   onReset,
 }) => {
   const [showShareModal, setShowShareModal] = useState(false);
+  const [showTranscriptDrawer, setShowTranscriptDrawer] = useState(false);
   const [expandedPattern, setExpandedPattern] = useState<number | null>(0);
 
   const [p1, p2] = metrics.participants;
@@ -83,6 +87,14 @@ export const ReportView: React.FC<ReportViewProps> = ({
         </div>
 
         <div className="flex items-center gap-2.5 w-full sm:w-auto">
+          <button
+            onClick={() => setShowTranscriptDrawer(true)}
+            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-white font-mono text-xs font-medium transition"
+            title="Inspect raw chat messages and search keywords"
+          >
+            <FileText className="w-3.5 h-3.5 text-amber-400" />
+            <span>Transcript</span>
+          </button>
           <button
             onClick={onReset}
             className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-white font-mono text-xs font-medium transition"
@@ -127,10 +139,13 @@ export const ReportView: React.FC<ReportViewProps> = ({
         </p>
 
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-obsidian-950 border border-obsidian-800 text-xs font-mono text-slate-400">
-          <span className="text-amber-400 font-semibold">Core Dynamic:</span>
+          <span className="text-amber-450 font-semibold">Core Dynamic:</span>
           <span>{report.overallVerdict.coreDynamic}</span>
         </div>
       </div>
+
+      {/* 2.5 Relational Health Scorecard (5 Pillars) */}
+      <RadarScorecard scorecard={metrics.scorecard} participants={metrics.participants} />
 
       {/* 3. Deep Relational Chapters: Relationship Epochs */}
       {report.relationshipEpochs && report.relationshipEpochs.length > 0 && (
@@ -511,6 +526,9 @@ export const ReportView: React.FC<ReportViewProps> = ({
         </div>
       </div>
 
+      {/* 8.5 Circadian Cadence & Velocity Charts */}
+      <ActivityCharts metrics={metrics} />
+
       {/* 9. Behavioral Diagnostic Patterns */}
       <div className="bg-obsidian-900 border border-obsidian-800 rounded-2xl p-6 shadow-xl space-y-4">
         <div className="flex items-center gap-2">
@@ -667,6 +685,14 @@ export const ReportView: React.FC<ReportViewProps> = ({
         onClose={() => setShowShareModal(false)}
         report={report}
         metrics={metrics}
+      />
+
+      {/* Transcript Inspector Drawer */}
+      <ChatTranscriptDrawer
+        isOpen={showTranscriptDrawer}
+        onClose={() => setShowTranscriptDrawer(false)}
+        messages={messages}
+        participants={metrics.participants}
       />
     </div>
   );

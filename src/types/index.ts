@@ -21,6 +21,14 @@ export interface ParticipantStats {
   topEmojis: { emoji: string; count: number }[];
 }
 
+export interface RelationalScorecard {
+  equity: number; // 0 to 100
+  responsiveness: number;
+  curiosity: number;
+  vulnerability: number;
+  consistency: number;
+}
+
 export interface ChatMetrics {
   participants: [string, string];
   totalMessages: number;
@@ -32,6 +40,7 @@ export interface ChatMetrics {
   stats: Record<string, ParticipantStats>;
   hourlyActivity: Record<number, { hour: number; countA: number; countB: number }>;
   weeklyVelocity: Array<{ weekLabel: string; countA: number; countB: number }>;
+  scorecard: RelationalScorecard;
 }
 
 export interface BehavioralPattern {
@@ -59,7 +68,7 @@ export interface RelationshipEpoch {
   chapterNumber: number;
   title: string;
   timeframe: string;
-  vibeScore: number; // 0 to 100
+  vibeScore: number;
   cadence: string;
   summary: string;
   keyMomentQuote: string;
@@ -85,7 +94,7 @@ export interface DiagnosticReport {
   overallVerdict: {
     headline: string;
     archetypeTitle: string;
-    brutalityScore: number; // 0 - 100
+    brutalityScore: number;
     summary: string;
     coreDynamic: string;
   };
@@ -103,7 +112,6 @@ export interface DiagnosticReport {
     beforeVibe: string;
     afterVibe: string;
   };
-  // DEEP DIMENSIONS
   attachmentDynamics: {
     dynamicType: string;
     personA: AttachmentProfile;
@@ -111,7 +119,7 @@ export interface DiagnosticReport {
     systemicLoop: string;
   };
   gottmanAnalysis: {
-    turnTowardsRateA: number; // % bids acknowledged positively
+    turnTowardsRateA: number;
     turnTowardsRateB: number;
     bidSummary: string;
     frictionMarkers: GottmanFrictionMarker[];

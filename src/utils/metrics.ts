@@ -1,4 +1,4 @@
-import { ChatMessage, ChatMetrics, ParticipantStats } from '../types';
+import { ChatMessage, ChatMetrics, ParticipantStats, RelationalScorecard } from '../types';
 
 /**
  * Computes deterministic statistics and conversational dynamics from parsed messages
@@ -24,12 +24,11 @@ export function calculateMetrics(
     [p2]: [],
   };
 
-  const INITIATION_GAP_MS = 4 * 60 * 60 * 1000; // 4 hours gap marks a new conversation initiation
+  const INITIATION_GAP_MS = 4 * 60 * 60 * 1000;
   let lastMessage: ChatMessage | null = null;
   let currentRunSender: string | null = null;
   let runLength = 0;
 
-  // Track weekly velocity
   const weeklyMap: Record<string, { countA: number; countB: number }> = {};
 
   for (let i = 0; i < messages.length; i++) {
@@ -39,17 +38,14 @@ export function calculateMetrics(
     const pStat = stats[msg.sender];
     pStat.messageCount++;
 
-    // Word and character count
     const words = msg.text.trim().split(/\s+/).filter(Boolean);
     pStat.wordCount += words.length;
     pStat.characterCount += msg.text.length;
 
-    // Questions
     if (msg.text.includes('?')) {
       pStat.questionsAsked += (msg.text.match(/\?/g) || []).length;
     }
 
-    // Hourly distribution
     const hour = msg.timestamp.getHours();
     if (msg.sender === p1) {
       hourlyActivity[hour].countA++;
@@ -57,12 +53,10 @@ export function calculateMetrics(
       hourlyActivity[hour].countB++;
     }
 
-    // Night owl (11 PM to 5 AM)
     if (hour >= 23 || hour < 5) {
       pStat.nightOwlMessages++;
     }
 
-    // Weekly velocity key
     const weekKey = getWeekKey(msg.timestamp);
     if (!weeklyMap[weekKey]) {
       weeklyMap[weekKey] = { countA: 0, countB: 0 };
@@ -73,29 +67,23 @@ export function calculateMetrics(
       weeklyMap[weekKey].countB++;
     }
 
-    // Double-texting and response latencies
     if (lastMessage) {
       const timeDiffMs = msg.timestamp.getTime() - lastMessage.timestamp.getTime();
 
-      // Check initiation
       if (timeDiffMs >= INITIATION_GAP_MS) {
         pStat.conversationsInitiated++;
       }
 
-      // Check response time (when sender changed)
       if (msg.sender !== lastMessage.sender) {
         const latencyMinutes = Math.max(0.1, timeDiffMs / (60 * 1000));
-        // Discard multi-day pauses from standard median latency calculation to avoid skew
         if (latencyMinutes <= 72 * 60) {
           responseLatencies[msg.sender].push(latencyMinutes);
         }
       }
     } else {
-      // First message is an initiation
       pStat.conversationsInitiated++;
     }
 
-    // Double-text run tracking
     if (msg.sender === currentRunSender) {
       runLength++;
       if (runLength >= 2) {
@@ -109,14 +97,12 @@ export function calculateMetrics(
     lastMessage = msg;
   }
 
-  // Calculate initiation percentages
   const totalInitiations = stats[p1].conversationsInitiated + stats[p2].conversationsInitiated;
   stats[p1].initiationPercentage =
     totalInitiations > 0 ? Math.round((stats[p1].conversationsInitiated / totalInitiations) * 100) : 50;
   stats[p2].initiationPercentage =
     totalInitiations > 0 ? Math.round((stats[p2].conversationsInitiated / totalInitiations) * 100) : 50;
 
-  // Calculate median & average response times
   for (const p of [p1, p2]) {
     const latencies = responseLatencies[p];
     if (latencies.length > 0) {
@@ -133,7 +119,6 @@ export function calculateMetrics(
     }
   }
 
-  // Format weekly velocity array
   const weeklyVelocity = Object.keys(weeklyMap)
     .sort()
     .map((weekLabel) => ({
@@ -146,6 +131,34 @@ export function calculateMetrics(
   const endDate = messages.length > 0 ? messages[messages.length - 1].timestamp : new Date();
   const totalDays = Math.max(1, Math.round((endDate.getTime() - startDate.getTime()) / (86400 * 1000)));
 
+  // Relational Scorecard (0 to 100)
+  const totalWords = stats[p1].wordCount + stats[p2].wordCount;
+  const initDiff = Math.abs(stats[p1].initiationPercentage - 50);
+  const wordDiff = Math.abs((stats[p1].wordCount / (totalWords || 1)) * 100 - 50);
+  const equityScore = Math.max(15, Math.min(98, Math.round(100 - (initDiff * 1.1 + wordDiff * 0.7))));
+
+  const avgLatency = (stats[p1].medianResponseTimeMinutes + stats[p2].medianResponseTimeMinutes) / 2;
+  const responsivenessScore = Math.max(15, Math.min(98, Math.round(100 - Math.min(85, avgLatency * 0.35))));
+
+  const totalQuestions = stats[p1].questionsAsked + stats[p2].questionsAsked;
+  const curiosityScore = Math.max(20, Math.min(95, Math.round(Math.min(95, 30 + (totalQuestions / (messages.length || 1)) * 300))));
+
+  const totalNight = stats[p1].nightOwlMessages + stats[p2].nightOwlMessages;
+  const vulnerabilityScore = Math.max(25, Math.min(95, Math.round(35 + (totalNight / (messages.length || 1)) * 250)));
+
+  const consistencyScore =
+    weeklyVelocity.length <= 1
+      ? 85
+      : Math.max(20, Math.min(95, Math.round(85 - Math.abs(stats[p1].doubleTextCount - stats[p2].doubleTextCount) * 4)));
+
+  const scorecard: RelationalScorecard = {
+    equity: equityScore,
+    responsiveness: responsivenessScore,
+    curiosity: curiosityScore,
+    vulnerability: vulnerabilityScore,
+    consistency: consistencyScore,
+  };
+
   return {
     participants,
     totalMessages: messages.length,
@@ -157,6 +170,7 @@ export function calculateMetrics(
     stats,
     hourlyActivity,
     weeklyVelocity,
+    scorecard,
   };
 }
 

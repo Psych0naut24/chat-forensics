@@ -21,9 +21,10 @@ export const App: React.FC = () => {
   const [metrics, setMetrics] = useState<ChatMetrics | null>(null);
   const [report, setReport] = useState<DiagnosticReport | null>(null);
 
-  // Load preferences from localStorage
+  // Load preferences from localStorage and environment
   useEffect(() => {
-    const savedKey = localStorage.getItem('gemini_api_key');
+    const envKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
+    const savedKey = localStorage.getItem('gemini_api_key') || envKey;
     if (savedKey) setApiKey(savedKey);
 
     const savedTone = localStorage.getItem('chat_tone') as ToneMode;
