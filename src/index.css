@@ -7,7 +7,7 @@
 /* ------------------------------------------------------------- */
 
 /* DARK MODE (Luxury Obsidian & Refined Amber/Gold) */
-:root, .dark, [data-theme="dark"] {
+:root, html.dark, [data-theme="dark"] {
   --color-obsidian-950: 8 11 17;        /* #080B11 */
   --color-obsidian-900: 14 19 31;       /* #0E131F */
   --color-obsidian-850: 20 28 46;       /* #141C2E */
@@ -31,7 +31,7 @@
 }
 
 /* LIGHT MODE (Clean Editorial SaaS White & High-Contrast Electric Indigo) */
-.light, [data-theme="light"] {
+html.light, [data-theme="light"], .light {
   --color-obsidian-950: 248 250 252;    /* #F8FAFC */
   --color-obsidian-900: 255 255 255;    /* #FFFFFF */
   --color-obsidian-850: 241 245 249;    /* #F1F5F9 */
@@ -56,69 +56,124 @@
 }
 
 /* ------------------------------------------------------------- */
-/* LIGHT MODE POLISH OVERRIDES (High Contrast Typography & Cards) */
+/* LIGHT MODE POLISH OVERRIDES (Surfaces, Typography, Borders)   */
 /* ------------------------------------------------------------- */
-.light, [data-theme="light"] {
+html.light, [data-theme="light"], .light {
   color: #1E293B;
   background-color: #F8FAFC !important;
 }
 
-.light .text-slate-100 {
+/* Explicit Card & Surface Overrides in Light Mode */
+.light .bg-obsidian-950,
+html.light .bg-obsidian-950 {
+  background-color: #F8FAFC !important;
+}
+
+.light .bg-obsidian-900,
+html.light .bg-obsidian-900,
+.light .bg-obsidian-900\/90,
+html.light .bg-obsidian-900\/90,
+.light .bg-obsidian-900\/80,
+html.light .bg-obsidian-900\/80 {
+  background-color: #FFFFFF !important;
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02) !important;
+}
+
+.light .bg-obsidian-850,
+html.light .bg-obsidian-850,
+.light .bg-obsidian-850\/80,
+html.light .bg-obsidian-850\/80,
+.light .bg-obsidian-850\/50,
+html.light .bg-obsidian-850\/50 {
+  background-color: #F1F5F9 !important;
+}
+
+.light .border-obsidian-800,
+html.light .border-obsidian-800,
+.light .border-obsidian-750,
+html.light .border-obsidian-750,
+.light .border-obsidian-700,
+html.light .border-obsidian-700 {
+  border-color: #E2E8F0 !important;
+}
+
+/* Amber Border Accents in Light Mode: Crisp Indigo borders */
+.light .border-amber-500\/40,
+html.light .border-amber-500\/40,
+.light .border-amber-500\/30,
+html.light .border-amber-500\/30,
+.light .border-amber-500\/20,
+html.light .border-amber-500\/20 {
+  border-color: rgba(79, 70, 229, 0.25) !important;
+}
+
+/* Typography in Light Mode */
+.light .text-slate-100,
+html.light .text-slate-100 {
   color: #0F172A !important;
 }
-.light .text-slate-200 {
+.light .text-slate-200,
+html.light .text-slate-200 {
   color: #0F172A !important;
 }
-.light .text-slate-300 {
+.light .text-slate-300,
+html.light .text-slate-300 {
   color: #1E293B !important;
 }
-.light .text-slate-400 {
+.light .text-slate-400,
+html.light .text-slate-400 {
   color: #475569 !important;
 }
-.light .text-slate-500 {
+.light .text-slate-500,
+html.light .text-slate-500 {
   color: #64748B !important;
 }
-.light .text-slate-600 {
+.light .text-slate-600,
+html.light .text-slate-600 {
   color: #94A3B8 !important;
 }
 
 /* Light Mode Buttons: Make sure white text is used over solid buttons */
-.light .text-obsidian-950 {
+.light .text-obsidian-950,
+html.light .text-obsidian-950 {
   color: #FFFFFF !important;
 }
-.light .bg-amber-500 {
+.light .bg-amber-500,
+html.light .bg-amber-500 {
+  background-color: #4F46E5 !important;
   color: #FFFFFF !important;
 }
-.light .bg-gradient-to-r.from-amber-500.to-amber-600 {
+.light .bg-gradient-to-r.from-amber-500.to-amber-600,
+html.light .bg-gradient-to-r.from-amber-500.to-amber-600 {
   background-image: none !important;
   background-color: #4F46E5 !important;
   color: #FFFFFF !important;
 }
-.light .bg-gradient-to-r.from-amber-500.to-amber-600:hover {
+.light .bg-gradient-to-r.from-amber-500.to-amber-600:hover,
+html.light .bg-gradient-to-r.from-amber-500.to-amber-600:hover {
   background-color: #4338CA !important;
-}
-
-/* Light Mode Cards & Surfaces */
-.light .bg-obsidian-900,
-.light .bg-obsidian-900\/90,
-.light .bg-obsidian-900\/80 {
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.02);
 }
 
 /* Inputs & Textareas in Light Mode */
 .light textarea,
-.light input {
+html.light textarea,
+.light input,
+html.light input {
   background-color: #FFFFFF !important;
   color: #0F172A !important;
   border-color: #CBD5E1 !important;
 }
 .light textarea:focus,
-.light input:focus {
+html.light textarea:focus,
+.light input:focus,
+html.light input:focus {
   border-color: #4F46E5 !important;
   outline: 2px solid rgba(79, 70, 229, 0.2) !important;
 }
 .light textarea::placeholder,
-.light input::placeholder {
+html.light textarea::placeholder,
+.light input::placeholder,
+html.light input::placeholder {
   color: #94A3B8 !important;
 }
 
@@ -130,7 +185,8 @@
     linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
 }
 
-.light .bg-grid-pattern {
+.light .bg-grid-pattern,
+html.light .bg-grid-pattern {
   background-image: 
     linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
