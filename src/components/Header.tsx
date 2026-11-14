@@ -1,6 +1,6 @@
 import React from 'react';
 import { ShieldCheck, Settings, RotateCcw } from 'lucide-react';
-import { AppTheme } from '../types';
+import { AppTheme, AiModelChoice } from '../types';
 import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {
@@ -8,6 +8,7 @@ interface HeaderProps {
   onReset: () => void;
   onOpenSettings: () => void;
   apiKeyConfigured: boolean;
+  activeModel?: AiModelChoice;
   currentTheme: AppTheme;
   onToggleTheme: () => void;
 }
@@ -17,6 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   onReset,
   onOpenSettings,
   apiKeyConfigured,
+  activeModel = 'gemini-3.8-flash',
   currentTheme,
   onToggleTheme,
 }) => {
@@ -70,7 +72,11 @@ export const Header: React.FC<HeaderProps> = ({
           >
             <Settings className="w-3.5 h-3.5" />
             <span className="hidden sm:inline">
-              {apiKeyConfigured ? 'Gemini AI Active' : 'API Settings'}
+              {apiKeyConfigured
+                ? activeModel === 'gemini-3.8-pro'
+                  ? 'Gemini 3.8 Pro'
+                  : 'Gemini 3.8 Flash'
+                : 'Local Engine'}
             </span>
           </button>
         </div>

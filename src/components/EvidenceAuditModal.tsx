@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   Search,
@@ -35,6 +36,12 @@ export const EvidenceAuditModal: React.FC<EvidenceAuditModalProps> = ({
 }) => {
   const [selectedDomain, setSelectedDomain] = useState<string>(initialDomain);
 
+  useEffect(() => {
+    if (initialDomain) {
+      setSelectedDomain(initialDomain);
+    }
+  }, [initialDomain, isOpen]);
+
   if (!isOpen) return null;
 
   const auditMap = buildEvidenceAudit(report, metrics, messages);
@@ -49,9 +56,9 @@ export const EvidenceAuditModal: React.FC<EvidenceAuditModalProps> = ({
     { id: 'inflection', label: 'Timeline Inflection', icon: Clock },
   ];
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/70 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-3xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-obsidian-800 rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/75 backdrop-blur-sm overflow-y-auto animate-fadeIn">
+      <div className="relative w-full max-w-3xl bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-obsidian-800 rounded-2xl shadow-2xl flex flex-col max-h-[92vh] overflow-hidden my-auto">
         {/* Top Header */}
         <div className="p-4 sm:p-5 border-b border-slate-200 dark:border-obsidian-800 flex items-center justify-between shrink-0 bg-slate-50/50 dark:bg-obsidian-950/50">
           <div className="flex items-center gap-3">
@@ -242,6 +249,7 @@ export const EvidenceAuditModal: React.FC<EvidenceAuditModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

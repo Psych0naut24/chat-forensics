@@ -80,6 +80,7 @@ export interface QnAPair {
   answer: string;
   timestamp: string;
   isAiGenerated: boolean;
+  modelUsed?: string;
 }
 
 export interface DiagnosticReport {

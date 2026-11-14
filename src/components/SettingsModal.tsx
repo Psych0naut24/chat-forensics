@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { createPortal } from 'react-dom';
 import { X, Key, Shield, Sparkles, Sliders, Check, Cpu } from 'lucide-react';
 import { ToneMode, AiModelChoice } from '../types';
 
@@ -48,9 +49,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
     (import.meta as any).env?.VITE_GOOGLE_API_KEY
   );
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-obsidian-900 border border-obsidian-800 rounded-2xl shadow-2xl p-6 sm:p-7 overflow-hidden max-h-[92vh] overflow-y-auto">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm overflow-y-auto animate-fadeIn">
+      <div className="relative w-full max-w-lg bg-obsidian-900 border border-obsidian-800 rounded-2xl shadow-2xl p-6 sm:p-7 overflow-hidden max-h-[92vh] overflow-y-auto my-auto">
         {/* Top Header */}
         <div className="flex items-center justify-between pb-4 border-b border-obsidian-800">
           <div className="flex items-center gap-2.5">
@@ -443,6 +444,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
           </div>
         </form>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

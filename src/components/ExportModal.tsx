@@ -1,4 +1,5 @@
 import React, { useRef, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
   X,
   Printer,
@@ -76,9 +77,9 @@ export const ExportModal: React.FC<ExportModalProps> = ({
     setTimeout(() => setCopiedSummary(false), 2000);
   };
 
-  return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/65 backdrop-blur-sm animate-fadeIn">
-      <div className="relative w-full max-w-lg bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-obsidian-800 rounded-2xl shadow-2xl p-6 overflow-hidden max-h-[92vh] overflow-y-auto">
+  return createPortal(
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/75 backdrop-blur-sm overflow-y-auto animate-fadeIn">
+      <div className="relative w-full max-w-lg bg-white dark:bg-obsidian-900 border border-slate-200 dark:border-obsidian-800 rounded-2xl shadow-2xl p-6 overflow-hidden max-h-[92vh] overflow-y-auto my-auto">
         {/* Top Header */}
         <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-obsidian-800">
           <div className="flex items-center gap-2.5">
@@ -438,6 +439,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };

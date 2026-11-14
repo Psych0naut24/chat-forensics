@@ -419,12 +419,17 @@ export async function interrogateCase(
   question: string,
   apiKey?: string,
   model: AiModelChoice = 'gemini-3.8-flash'
-): Promise<string> {
+): Promise<{ answer: string; modelUsed: string }> {
   const localAnswer = generateLocalForensicAnswer(question, messages, metrics, report);
 
   if (!apiKey || apiKey.trim() === '') {
-    return localAnswer;
+    return {
+      answer: localAnswer,
+      modelUsed: 'Local Heuristic Engine',
+    };
   }
+
+  const modelDisplayName = model === 'gemini-3.8-pro' ? 'Gemini 3.8 Pro' : 'Gemini 3.8 Flash';
 
   try {
     const sampleExcerpts = sampleChatExcerpts(messages, 250);
@@ -449,16 +454,25 @@ Provide a candid, perceptive, forensic answer citing specific message timestamps
     if (apiResult.ok && apiResult.data) {
       const candidateText = apiResult.data?.candidates?.[0]?.content?.parts?.[0]?.text;
       if (candidateText && candidateText.trim().length > 0) {
-        return candidateText.trim();
+        return {
+          answer: candidateText.trim(),
+          modelUsed: modelDisplayName,
+        };
       }
     }
 
     // If Gemini call failed (invalid key, 404, or quota limit), deliver local answer + diagnostic note
     const reason = apiResult.error ? ` (${apiResult.error})` : '';
-    return `${localAnswer}\n\n[Diagnostic Note: Gemini API was unavailable${reason}. Delivered via Chat Forensics Local Deterministic Engine.]`;
+    return {
+      answer: `${localAnswer}\n\n[Diagnostic Note: Gemini API was unavailable${reason}. Delivered via Chat Forensics Local Deterministic Engine.]`,
+      modelUsed: 'Local Engine (Gemini fallback)',
+    };
   } catch (err: any) {
     const errText = err?.message ? ` (${err.message})` : '';
-    return `${localAnswer}\n\n[Diagnostic Note: Gemini API connection failed${errText}. Delivered via Chat Forensics Local Deterministic Engine.]`;
+    return {
+      answer: `${localAnswer}\n\n[Diagnostic Note: Gemini API connection failed${errText}. Delivered via Chat Forensics Local Deterministic Engine.]`,
+      modelUsed: 'Local Engine (Connection fallback)',
+    };
   }
 }
 

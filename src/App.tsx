@@ -135,6 +135,7 @@ export const App: React.FC = () => {
         onReset={handleReset}
         onOpenSettings={() => setShowSettings(true)}
         apiKeyConfigured={!!apiKey && apiKey.trim().length > 0}
+        activeModel={model}
         currentTheme={theme}
         onToggleTheme={handleToggleTheme}
       />

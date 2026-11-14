@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Send, MessageSquare, Bot, User, CornerDownRight, Loader2 } from 'lucide-react';
+import { Send, MessageSquare, Bot, User, CornerDownRight, Loader2, Cpu } from 'lucide-react';
 import { ChatMessage, ChatMetrics, DiagnosticReport, AiModelChoice, QnAPair } from '../types';
 import { interrogateCase } from '../services/gemini';
 
@@ -37,14 +37,15 @@ export const CaseInterrogator: React.FC<CaseInterrogatorProps> = ({
     setQuery('');
     setIsLoading(true);
 
-    const answer = await interrogateCase(messages, metrics, report, currentQ, apiKey, model);
+    const result = await interrogateCase(messages, metrics, report, currentQ, apiKey, model);
 
     const newPair: QnAPair = {
       id: `qna-${Date.now()}`,
       question: currentQ,
-      answer,
+      answer: result.answer,
       timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
       isAiGenerated: !!apiKey && apiKey.trim().length > 0,
+      modelUsed: result.modelUsed,
     };
 
     setHistory((prev) => [...prev, newPair]);
@@ -115,9 +116,15 @@ export const CaseInterrogator: React.FC<CaseInterrogatorProps> = ({
 
               {/* Answer */}
               <div className="flex items-start gap-2.5 text-xs sm:text-sm text-slate-300 pl-6 border-t border-obsidian-850 pt-2.5">
-                <Bot className="w-4 h-4 text-amber-450 mt-0.5 shrink-0" />
-                <div className="flex-1 leading-relaxed">
-                  <p className="whitespace-pre-line">{item.answer}</p>
+                <Bot className="w-4 h-4 text-indigo-600 dark:text-amber-450 mt-0.5 shrink-0" />
+                <div className="flex-1 leading-relaxed space-y-1.5">
+                  <div className="flex items-center gap-2">
+                    <span className="font-mono text-[9px] uppercase px-2 py-0.5 rounded font-bold border flex items-center gap-1 bg-indigo-50 border-indigo-200 text-indigo-700 dark:bg-amber-500/10 dark:border-amber-500/30 dark:text-amber-400">
+                      <Cpu className="w-3 h-3" />
+                      <span>{item.modelUsed || (item.isAiGenerated ? 'Gemini 3.8' : 'Local Heuristics')}</span>
+                    </span>
+                  </div>
+                  <p className="whitespace-pre-line text-slate-700 dark:text-slate-200">{item.answer}</p>
                 </div>
               </div>
             </div>

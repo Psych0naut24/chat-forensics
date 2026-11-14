@@ -18,6 +18,7 @@ import {
   HeartHandshake,
   Milestone,
   Search,
+  Cpu,
 } from 'lucide-react';
 import {
   DiagnosticReport,
@@ -81,6 +82,10 @@ export const ReportView: React.FC<ReportViewProps> = ({
             </span>
             <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-purple-50 border border-purple-200 text-purple-700 dark:bg-purple-500/10 dark:border-purple-500/30 dark:text-purple-300 font-medium">
               {report.caseMetadata.depthLevel}
+            </span>
+            <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-indigo-50 border border-indigo-200 text-indigo-700 dark:bg-amber-500/10 dark:border-amber-500/30 dark:text-amber-300 font-bold flex items-center gap-1">
+              <Cpu className="w-3 h-3" />
+              <span>Model: {apiKey && apiKey.trim().length > 0 ? (model === 'gemini-3.8-pro' ? 'Gemini 3.8 Pro' : 'Gemini 3.8 Flash') : 'Local Engine'}</span>
             </span>
           </div>
           <h2 className="text-xl sm:text-2xl font-bold font-serif text-slate-100 flex items-center gap-2">

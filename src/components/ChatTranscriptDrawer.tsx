@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { createPortal } from 'react-dom';
 import { ChatMessage } from '../types';
 import { X, Search, MessageSquare } from 'lucide-react';
 
@@ -28,7 +29,7 @@ export const ChatTranscriptDrawer: React.FC<ChatTranscriptDrawerProps> = ({
     return matchesSender && matchesSearch;
   });
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex items-center justify-end bg-obsidian-950/80 backdrop-blur-sm animate-fadeIn">
       <div className="w-full max-w-2xl h-full bg-obsidian-900 border-l border-obsidian-800 flex flex-col shadow-2xl">
         {/* Top Header */}
@@ -136,6 +137,7 @@ export const ChatTranscriptDrawer: React.FC<ChatTranscriptDrawerProps> = ({
           )}
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 };
