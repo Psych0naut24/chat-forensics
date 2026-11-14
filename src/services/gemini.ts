@@ -382,6 +382,28 @@ export function generateLocalForensicAnswer(
     return `${report.powerDynamic.dominantParticipant} holds conversational leverage (${report.powerDynamic.leveragePercentage}%). ${report.powerDynamic.explanation}`;
   }
 
+  // 7. Source / Evidence / Why finding was made
+  if (
+    cleanQ.includes('source') ||
+    cleanQ.includes('evidence') ||
+    cleanQ.includes('proof') ||
+    cleanQ.includes('why is it saying') ||
+    cleanQ.includes('why did it say') ||
+    cleanQ.includes('why does the report') ||
+    cleanQ.includes('why')
+  ) {
+    const slower = s1.medianResponseTimeMinutes > s2.medianResponseTimeMinutes ? p1 : p2;
+    const slowMin = Math.max(s1.medianResponseTimeMinutes, s2.medianResponseTimeMinutes);
+    const fastMin = Math.max(1, Math.min(s1.medianResponseTimeMinutes, s2.medianResponseTimeMinutes));
+    const ratio = (slowMin / fastMin).toFixed(1);
+
+    return `The findings in this case file are derived from 3 primary empirical sources in your uploaded chat:\n\n1. Response Latency Evidence: ${slower}'s median delay is ${slowMin} min vs ${fastMin} min (a ${ratio}x pacing asymmetry).\n2. Initiation Disparity: ${p1} (${s1.initiationPercentage}%) vs ${p2} (${s2.initiationPercentage}%) across ${metrics.totalMessages} total messages.\n3. Gottman Friction Markers: ${
+      report.gottmanAnalysis.frictionMarkers.length > 0
+        ? report.gottmanAnalysis.frictionMarkers.map((m) => `[${m.type}] by ${m.instigator}: "${m.quote}"`).join(', ')
+        : 'Cadence and response buffering without direct aggressive language'
+    }.\n\nYou can also click the "Why? (Evidence)" button in the case header or on any diagnostic card to view the full evidentiary audit modal with cited timestamps and scientific criteria.`;
+  }
+
   // Default synthesis
   return `In this case file, the primary dynamic is "${report.overallVerdict.headline}". ${report.powerDynamic.dominantParticipant} holds conversational leverage (${report.powerDynamic.leveragePercentage}%), while the systemic feedback loop revolves around "${report.attachmentDynamics?.systemicLoop || report.overallVerdict.coreDynamic}".`;
 }

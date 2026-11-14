@@ -12,6 +12,7 @@ interface CaseInterrogatorProps {
 }
 
 const SUGGESTED_QUESTIONS = [
+  'What is the exact source and evidence for these findings?',
   'Were they genuinely busy or emotionally pulling away?',
   'Who apologized more after tense moments?',
   'What specific topics triggered the longest response delays?',

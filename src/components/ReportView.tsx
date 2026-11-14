@@ -17,6 +17,7 @@ import {
   GitBranch,
   HeartHandshake,
   Milestone,
+  Search,
 } from 'lucide-react';
 import {
   DiagnosticReport,
@@ -25,6 +26,7 @@ import {
   AiModelChoice,
 } from '../types';
 import { ExportModal } from './ExportModal';
+import { EvidenceAuditModal } from './EvidenceAuditModal';
 import { CaseInterrogator } from './CaseInterrogator';
 import { RadarScorecard } from './RadarScorecard';
 import { ActivityCharts } from './ActivityCharts';
@@ -49,7 +51,14 @@ export const ReportView: React.FC<ReportViewProps> = ({
 }) => {
   const [showShareModal, setShowShareModal] = useState(false);
   const [showTranscriptDrawer, setShowTranscriptDrawer] = useState(false);
+  const [showEvidenceModal, setShowEvidenceModal] = useState(false);
+  const [evidenceDomain, setEvidenceDomain] = useState<string>('verdict');
   const [expandedPattern, setExpandedPattern] = useState<number | null>(0);
+
+  const handleOpenEvidence = (domain: string) => {
+    setEvidenceDomain(domain);
+    setShowEvidenceModal(true);
+  };
 
   const [p1, p2] = metrics.participants;
   const s1 = metrics.stats[p1];
@@ -86,7 +95,15 @@ export const ReportView: React.FC<ReportViewProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
+          <button
+            onClick={() => handleOpenEvidence('verdict')}
+            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-white font-mono text-xs font-medium transition cursor-pointer"
+            title="Inspect evidence, calculations, and exact timestamps behind every claim"
+          >
+            <Search className="w-3.5 h-3.5 text-indigo-600 dark:text-amber-400" />
+            <span>Why? (Evidence)</span>
+          </button>
           <button
             onClick={() => setShowTranscriptDrawer(true)}
             className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-white font-mono text-xs font-medium transition"
@@ -139,14 +156,29 @@ export const ReportView: React.FC<ReportViewProps> = ({
           {report.overallVerdict.summary}
         </p>
 
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-obsidian-950 border border-obsidian-800 text-xs font-mono text-slate-400">
-          <span className="text-indigo-700 dark:text-amber-450 font-bold">Core Dynamic:</span>
-          <span className="text-slate-200">{report.overallVerdict.coreDynamic}</span>
+        <div className="flex flex-wrap items-center gap-3 pt-1">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-obsidian-950 border border-obsidian-800 text-xs font-mono text-slate-400">
+            <span className="text-indigo-700 dark:text-amber-450 font-bold">Core Dynamic:</span>
+            <span className="text-slate-200">{report.overallVerdict.coreDynamic}</span>
+          </div>
+
+          <button
+            onClick={() => handleOpenEvidence('verdict')}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:border-amber-500/30 dark:text-amber-400 text-xs font-mono font-bold transition cursor-pointer shadow-sm"
+            title="Inspect statistical evidence and primary source quotes behind this verdict"
+          >
+            <Search className="w-3.5 h-3.5" />
+            <span>Why this verdict? (View Proof & Citations)</span>
+          </button>
         </div>
       </div>
 
       {/* 2.5 Relational Health Scorecard (5 Pillars) */}
-      <RadarScorecard scorecard={metrics.scorecard} participants={metrics.participants} />
+      <RadarScorecard
+        scorecard={metrics.scorecard}
+        participants={metrics.participants}
+        onAuditScores={() => handleOpenEvidence('scorecard')}
+      />
 
       {/* 3. Deep Relational Chapters: Relationship Epochs */}
       {report.relationshipEpochs && report.relationshipEpochs.length > 0 && (
@@ -195,7 +227,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
       {/* 4. Clinical Attachment Theory Breakdown */}
       {report.attachmentDynamics && (
         <div className="bg-obsidian-900 border border-obsidian-800 rounded-2xl p-6 shadow-xl space-y-5">
-          <div className="flex items-center justify-between">
+          <div className="flex flex-wrap items-center justify-between gap-3">
             <div className="flex items-center gap-2.5">
               <div className="w-8 h-8 rounded-lg bg-purple-500/10 border border-purple-500/30 flex items-center justify-center text-purple-400">
                 <GitBranch className="w-4 h-4" />
@@ -205,9 +237,19 @@ export const ReportView: React.FC<ReportViewProps> = ({
                 <p className="text-xs text-slate-400">Classifying subconscious relational drivers and reactive triggers</p>
               </div>
             </div>
-            <span className="text-xs font-mono uppercase px-2.5 py-1 rounded bg-purple-500/10 text-purple-300 border border-purple-500/30 font-semibold">
-              {report.attachmentDynamics.dynamicType}
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => handleOpenEvidence('attachment')}
+                className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-purple-50 hover:bg-purple-100 border border-purple-200 text-purple-700 dark:bg-purple-500/10 dark:hover:bg-purple-500/20 dark:border-purple-500/30 dark:text-purple-300 text-xs font-mono font-bold transition cursor-pointer shadow-sm"
+                title="Inspect behavioral triggers and exact attachment criteria"
+              >
+                <Search className="w-3.5 h-3.5" />
+                <span>Why these styles? (View Triggers)</span>
+              </button>
+              <span className="text-xs font-mono uppercase px-2.5 py-1 rounded bg-purple-500/10 text-purple-300 border border-purple-500/30 font-semibold">
+                {report.attachmentDynamics.dynamicType}
+              </span>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -273,14 +315,24 @@ export const ReportView: React.FC<ReportViewProps> = ({
       {/* 5. Gottman Relational Diagnostics: Bids & Friction Markers */}
       {report.gottmanAnalysis && (
         <div className="bg-obsidian-900 border border-obsidian-800 rounded-2xl p-6 shadow-xl space-y-4">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
-              <HeartHandshake className="w-4 h-4" />
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 rounded-lg bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+                <HeartHandshake className="w-4 h-4" />
+              </div>
+              <div>
+                <h3 className="text-base font-bold text-slate-100 font-serif">Gottman Clinical Relational Health</h3>
+                <p className="text-xs text-slate-400">Bids for emotional connection and presence of the Four Friction Markers</p>
+              </div>
             </div>
-            <div>
-              <h3 className="text-base font-bold text-slate-100 font-serif">Gottman Clinical Relational Health</h3>
-              <p className="text-xs text-slate-400">Bids for emotional connection and presence of the Four Friction Markers</p>
-            </div>
+            <button
+              onClick={() => handleOpenEvidence('gottman')}
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-800 dark:bg-emerald-500/10 dark:hover:bg-emerald-500/20 dark:border-emerald-500/30 dark:text-emerald-400 text-xs font-mono font-bold transition cursor-pointer shadow-sm"
+              title="Inspect exact quoted messages and Gottman criteria"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span>Why these markers? (Inspect Proof)</span>
+            </button>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -316,7 +368,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
       {/* 6. Power Dynamic & Conversational Leverage */}
       <div className="bg-obsidian-900 border border-obsidian-800 rounded-2xl p-6 shadow-xl space-y-5">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-wrap items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-450">
               <UserCheck className="w-4 h-4" />
@@ -326,11 +378,21 @@ export const ReportView: React.FC<ReportViewProps> = ({
               <p className="text-xs text-slate-400">Measured through initiation pacing, response latency, and word volume disparity</p>
             </div>
           </div>
-          <span className="text-xs font-mono uppercase px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30 font-bold">
-            {report.powerDynamic.dominantParticipant === 'Equal Balance'
-              ? 'Balanced Dynamic'
-              : `${report.powerDynamic.dominantParticipant} Holds Leverage`}
-          </span>
+          <div className="flex items-center gap-2">
+            <button
+              onClick={() => handleOpenEvidence('power')}
+              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-lg bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:border-amber-500/30 dark:text-amber-400 text-xs font-mono font-bold transition cursor-pointer shadow-sm"
+              title="Inspect latency ratio, initiation gap, and double-text proof"
+            >
+              <Search className="w-3.5 h-3.5" />
+              <span>Why this split? (View Proof)</span>
+            </button>
+            <span className="text-xs font-mono uppercase px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30 font-bold">
+              {report.powerDynamic.dominantParticipant === 'Equal Balance'
+                ? 'Balanced Dynamic'
+                : `${report.powerDynamic.dominantParticipant} Holds Leverage`}
+            </span>
+          </div>
         </div>
 
         {/* Visual Balance Slider */}
@@ -377,18 +439,28 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
       {/* 7. Inflection Point (When Things Shifted) */}
       <div className="bg-obsidian-900 border border-obsidian-800 rounded-2xl p-6 shadow-xl space-y-4">
-        <div className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400">
-            <TrendingDown className="w-4 h-4" />
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-red-500/10 border border-red-500/30 flex items-center justify-center text-red-400">
+              <TrendingDown className="w-4 h-4" />
+            </div>
+            <div>
+              <h3 className="text-base font-bold text-slate-100 font-serif">
+                The Inflection Point ({report.inflectionPoint.period})
+              </h3>
+              <p className="text-xs text-slate-400">
+                Pinpointing where the conversational energy and responsiveness altered
+              </p>
+            </div>
           </div>
-          <div>
-            <h3 className="text-base font-bold text-slate-100 font-serif">
-              The Inflection Point ({report.inflectionPoint.period})
-            </h3>
-            <p className="text-xs text-slate-400">
-              Pinpointing where the conversational energy and responsiveness altered
-            </p>
-          </div>
+          <button
+            onClick={() => handleOpenEvidence('inflection')}
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 border border-red-200 text-red-800 dark:bg-red-500/10 dark:hover:bg-red-500/20 dark:border-red-500/30 dark:text-red-400 text-xs font-mono font-bold transition cursor-pointer shadow-sm"
+            title="Inspect weekly velocity curves and landmark quotes"
+          >
+            <Search className="w-3.5 h-3.5" />
+            <span>Why this shift? (View Proof)</span>
+          </button>
         </div>
 
         <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-800/80 space-y-2">
@@ -686,6 +758,17 @@ export const ReportView: React.FC<ReportViewProps> = ({
         onClose={() => setShowShareModal(false)}
         report={report}
         metrics={metrics}
+      />
+
+      {/* Forensic Evidence & Source Audit Modal */}
+      <EvidenceAuditModal
+        isOpen={showEvidenceModal}
+        onClose={() => setShowEvidenceModal(false)}
+        initialDomain={evidenceDomain}
+        report={report}
+        metrics={metrics}
+        messages={messages}
+        onOpenTranscript={() => setShowTranscriptDrawer(true)}
       />
 
       {/* Transcript Inspector Drawer */}

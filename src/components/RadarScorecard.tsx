@@ -1,13 +1,18 @@
 import React from 'react';
 import { RelationalScorecard } from '../types';
-import { Scale, Zap, HelpCircle, Heart, Activity } from 'lucide-react';
+import { Scale, Zap, HelpCircle, Heart, Activity, Search } from 'lucide-react';
 
 interface RadarScorecardProps {
   scorecard: RelationalScorecard;
   participants: [string, string];
+  onAuditScores?: () => void;
 }
 
-export const RadarScorecard: React.FC<RadarScorecardProps> = ({ scorecard, participants }) => {
+export const RadarScorecard: React.FC<RadarScorecardProps> = ({
+  scorecard,
+  participants,
+  onAuditScores,
+}) => {
   const [p1, p2] = participants;
 
   const pillars = [
@@ -66,11 +71,21 @@ export const RadarScorecard: React.FC<RadarScorecardProps> = ({ scorecard, parti
     <div className="bg-obsidian-900 border border-obsidian-800 rounded-2xl p-6 shadow-xl space-y-6">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-obsidian-800 pb-4">
         <div>
-          <h3 className="text-base font-bold text-slate-100 font-serif flex items-center gap-2">
+          <h3 className="text-base font-bold text-slate-100 font-serif flex flex-wrap items-center gap-2">
             <span>Relational Health Scorecard</span>
             <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">
               5-Pillar Matrix
             </span>
+            {onAuditScores && (
+              <button
+                onClick={onAuditScores}
+                className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 dark:bg-amber-500/10 dark:hover:bg-amber-500/20 dark:border-amber-500/30 dark:text-amber-400 font-mono text-[10px] font-bold transition cursor-pointer"
+                title="Inspect the exact mathematical formulas and data behind these scores"
+              >
+                <Search className="w-3 h-3" />
+                <span>Why these scores? (Audit Data)</span>
+              </button>
+            )}
           </h3>
           <p className="text-xs text-slate-400">
             Psychometric evaluation of conversational dynamics between {p1} and {p2}
