@@ -4,8 +4,33 @@
 
 @layer base {
   body {
-    @apply bg-[#070A10] text-slate-100;
+    @apply bg-[#070A10] text-slate-100 transition-colors duration-300;
   }
+}
+
+/* Background Grid Pattern */
+.bg-grid-pattern {
+  background-size: 32px 32px;
+  background-image: 
+    linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+}
+
+/* Glow effects */
+.glow-amber {
+  box-shadow: 0 0 50px -10px rgba(245, 158, 11, 0.15);
+}
+
+.glow-cyber {
+  box-shadow: 0 0 50px -10px rgba(56, 189, 248, 0.2);
+}
+
+.glow-emerald {
+  box-shadow: 0 0 50px -10px rgba(16, 185, 129, 0.15);
+}
+
+.glow-classified {
+  box-shadow: 0 0 50px -10px rgba(239, 68, 68, 0.15);
 }
 
 @keyframes fadeIn {
@@ -29,12 +54,12 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: #0D111A;
+  background: rgba(0, 0, 0, 0.2);
 }
 ::-webkit-scrollbar-thumb {
-  background: #1F293D;
+  background: rgba(255, 255, 255, 0.1);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #32425E;
+  background: rgba(255, 255, 255, 0.2);
 }

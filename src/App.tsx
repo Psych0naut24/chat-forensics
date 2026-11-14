@@ -4,7 +4,14 @@ import { ChatInput } from './components/ChatInput';
 import { AnalyzingState } from './components/AnalyzingState';
 import { ReportView } from './components/ReportView';
 import { SettingsModal } from './components/SettingsModal';
-import { ChatMessage, ChatMetrics, DiagnosticReport, ToneMode, AiModelChoice } from './types';
+import {
+  ChatMessage,
+  ChatMetrics,
+  DiagnosticReport,
+  ToneMode,
+  AiModelChoice,
+  AppTheme,
+} from './types';
 import { parseChatLog } from './utils/parser';
 import { calculateMetrics } from './utils/metrics';
 import { analyzeChatWithGemini } from './services/gemini';
@@ -14,6 +21,7 @@ export const App: React.FC = () => {
   const [apiKey, setApiKey] = useState<string>('');
   const [tone, setTone] = useState<ToneMode>('candid');
   const [model, setModel] = useState<AiModelChoice>('gemini-2.5-flash');
+  const [theme, setTheme] = useState<AppTheme>('noir-amber');
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -23,15 +31,19 @@ export const App: React.FC = () => {
 
   // Load preferences from localStorage and environment
   useEffect(() => {
-    const envKey = (import.meta as any).env?.VITE_GEMINI_API_KEY || '';
-    const savedKey = localStorage.getItem('gemini_api_key') || envKey;
-    if (savedKey) setApiKey(savedKey);
+    const envKey = ((import.meta as any).env?.VITE_GEMINI_API_KEY || '').trim();
+    const localKey = (localStorage.getItem('gemini_api_key') || '').trim();
+    const activeKey = localKey || envKey;
+    if (activeKey) setApiKey(activeKey);
 
     const savedTone = localStorage.getItem('chat_tone') as ToneMode;
     if (savedTone) setTone(savedTone);
 
     const savedModel = localStorage.getItem('gemini_model') as AiModelChoice;
     if (savedModel) setModel(savedModel);
+
+    const savedTheme = localStorage.getItem('chat_theme') as AppTheme;
+    if (savedTheme) setTheme(savedTheme);
   }, []);
 
   const handleSaveApiKey = (key: string) => {
@@ -49,11 +61,15 @@ export const App: React.FC = () => {
     localStorage.setItem('gemini_model', newModel);
   };
 
+  const handleChangeTheme = (newTheme: AppTheme) => {
+    setTheme(newTheme);
+    localStorage.setItem('chat_theme', newTheme);
+  };
+
   const handleAnalyze = async (rawText: string, scrubPII: boolean) => {
     setIsLoading(true);
 
     try {
-      // 1. Client-side parse
       const { messages: parsedMsgs, participants } = parseChatLog(rawText, scrubPII);
 
       if (parsedMsgs.length < 3 || participants.length < 2) {
@@ -66,14 +82,10 @@ export const App: React.FC = () => {
 
       setMessages(parsedMsgs);
 
-      // 2. Compute deterministic metrics
       const computedMetrics = calculateMetrics(parsedMsgs, [participants[0], participants[1]]);
       setMetrics(computedMetrics);
 
-      // 3. Minimum delay for forensic analysis animation
       const delayPromise = new Promise((resolve) => setTimeout(resolve, 2000));
-
-      // 4. Generate diagnosis (Gemini API or local heuristics)
       const reportPromise = analyzeChatWithGemini(parsedMsgs, computedMetrics, apiKey, tone, model);
 
       const [, generatedReport] = await Promise.all([delayPromise, reportPromise]);
@@ -94,14 +106,35 @@ export const App: React.FC = () => {
     setIsLoading(false);
   };
 
+  const getThemeClasses = (t: AppTheme) => {
+    switch (t) {
+      case 'cyber-neon':
+        return 'bg-[#050811] bg-grid-pattern selection:bg-cyan-500/20 selection:text-cyan-300';
+      case 'linear-luxury':
+        return 'bg-[#09090B] bg-grid-pattern selection:bg-emerald-500/20 selection:text-emerald-300';
+      case 'classified-dossier':
+        return 'bg-[#0D0F14] bg-grid-pattern selection:bg-red-500/20 selection:text-red-300 font-mono';
+      case 'noir-amber':
+      default:
+        return 'bg-[#070A10] bg-grid-pattern selection:bg-amber-500/20 selection:text-amber-300';
+    }
+  };
+
   return (
-    <div className="min-h-screen bg-obsidian-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500/20 selection:text-amber-300">
+    <div
+      data-theme={theme}
+      className={`min-h-screen text-slate-100 flex flex-col transition-colors duration-300 ${getThemeClasses(
+        theme
+      )}`}
+    >
       {/* Top Navigation */}
       <Header
         hasReport={!!report}
         onReset={handleReset}
         onOpenSettings={() => setShowSettings(true)}
         apiKeyConfigured={!!apiKey && apiKey.trim().length > 0}
+        currentTheme={theme}
+        onSelectTheme={handleChangeTheme}
       />
 
       {/* Main Workspace Body */}

@@ -1,11 +1,15 @@
 import React from 'react';
 import { ShieldCheck, Settings, RotateCcw } from 'lucide-react';
+import { AppTheme } from '../types';
+import { ThemeSelector } from './ThemeSelector';
 
 interface HeaderProps {
   hasReport: boolean;
   onReset: () => void;
   onOpenSettings: () => void;
   apiKeyConfigured: boolean;
+  currentTheme: AppTheme;
+  onSelectTheme: (theme: AppTheme) => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -13,9 +17,11 @@ export const Header: React.FC<HeaderProps> = ({
   onReset,
   onOpenSettings,
   apiKeyConfigured,
+  currentTheme,
+  onSelectTheme,
 }) => {
   return (
-    <header className="border-b border-obsidian-800 bg-obsidian-950/80 backdrop-blur-md sticky top-0 z-30 px-4 lg:px-8 py-3.5 transition-all">
+    <header className="border-b border-obsidian-800 bg-obsidian-950/85 backdrop-blur-md sticky top-0 z-30 px-4 lg:px-8 py-3.5 transition-all">
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         {/* Logo and Brand */}
         <div className="flex items-center gap-3 cursor-pointer" onClick={onReset}>
@@ -39,6 +45,9 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
+          {/* Theme Selector Dropdown */}
+          <ThemeSelector currentTheme={currentTheme} onSelectTheme={onSelectTheme} />
+
           {hasReport && (
             <button
               onClick={onReset}
