@@ -3,123 +3,109 @@
 @tailwind utilities;
 
 /* ------------------------------------------------------------- */
-/* 5 AESTHETIC & COLOR THEMES                                    */
+/* 2 POLISHED THEMES: DARK (Default) & LIGHT                     */
 /* ------------------------------------------------------------- */
 
-/* 1. Noir Amber (Default Detective Onyx & Gold) */
-:root, [data-theme="noir-amber"] {
-  --color-base: #070A10;
-  --color-surface: #0D111A;
-  --color-card: #121824;
-  --color-border: #1F293D;
-  --color-border-subtle: #29354D;
+/* DARK MODE (Luxury Obsidian & Refined Amber/Gold) */
+:root, .dark, [data-theme="dark"] {
+  --color-base: #080B11;
+  --color-surface: #0E131F;
+  --color-card: #141C2E;
+  --color-card-subtle: #192338;
+  --color-border: #1E2940;
+  --color-border-subtle: #293856;
   --color-accent: #F59E0B;
   --color-accent-text: #FBBF24;
   --color-accent-hover: #D97706;
   --color-accent-subtle: rgba(245, 158, 11, 0.12);
+  --color-text-title: #F8FAFC;
+  --color-text-body: #CBD5E1;
+  --color-text-muted: #8493AB;
   color-scheme: dark;
 }
 
-/* 2. Cyber Neon (Futuristic Space Navy & Electric Cyan/Violet) */
-[data-theme="cyber-neon"] {
-  --color-base: #040714;
-  --color-surface: #091024;
-  --color-card: #0E1838;
-  --color-border: #1E2E5C;
-  --color-border-subtle: #2B417F;
-  --color-accent: #06B6D4;
-  --color-accent-text: #38BDF8;
-  --color-accent-hover: #0891B2;
-  --color-accent-subtle: rgba(6, 182, 212, 0.15);
-  color-scheme: dark;
-}
-
-/* 3. Linear Luxury (Carbon Graphite & Emerald Status) */
-[data-theme="linear-luxury"] {
-  --color-base: #09090B;
-  --color-surface: #121215;
-  --color-card: #18181B;
-  --color-border: #27272A;
-  --color-border-subtle: #3F3F46;
-  --color-accent: #10B981;
-  --color-accent-text: #34D399;
-  --color-accent-hover: #059669;
-  --color-accent-subtle: rgba(16, 185, 129, 0.12);
-  color-scheme: dark;
-}
-
-/* 4. Classified Dossier (Agency Archive & Red Ink) */
-[data-theme="classified-dossier"] {
-  --color-base: #0D0F14;
-  --color-surface: #151820;
-  --color-card: #1B202B;
-  --color-border: #2D3445;
-  --color-border-subtle: #3E4860;
-  --color-accent: #EF4444;
-  --color-accent-text: #F87171;
-  --color-accent-hover: #DC2626;
-  --color-accent-subtle: rgba(239, 68, 68, 0.15);
-  color-scheme: dark;
-}
-
-/* 5. Clean Editorial Light (SaaS White & Electric Indigo) */
-[data-theme="clean-light"] {
+/* LIGHT MODE (Clean Editorial SaaS White & Indigo Cobalt) */
+.light, [data-theme="light"] {
   --color-base: #F8FAFC;
   --color-surface: #FFFFFF;
   --color-card: #F1F5F9;
-  --color-border: #CBD5E1;
-  --color-border-subtle: #94A3B8;
+  --color-card-subtle: #E2E8F0;
+  --color-border: #E2E8F0;
+  --color-border-subtle: #CBD5E1;
   --color-accent: #4F46E5;
-  --color-accent-text: #4338CA;
-  --color-accent-hover: #3730A3;
-  --color-accent-subtle: rgba(79, 70, 229, 0.1);
+  --color-accent-text: #4F46E5;
+  --color-accent-hover: #4338CA;
+  --color-accent-subtle: rgba(79, 70, 229, 0.08);
+  --color-text-title: #0F172A;
+  --color-text-body: #334155;
+  --color-text-muted: #64748B;
   color-scheme: light;
 }
 
-/* Light Mode Overrides for text clarity */
-[data-theme="clean-light"] {
-  color: #0F172A;
+/* ------------------------------------------------------------- */
+/* LIGHT MODE POLISH OVERRIDES                                   */
+/* ------------------------------------------------------------- */
+.light, [data-theme="light"] {
+  color: #1E293B;
 }
-[data-theme="clean-light"] .text-slate-100 {
+
+.light .text-slate-100 {
   color: #0F172A !important;
 }
-[data-theme="clean-light"] .text-slate-200 {
+.light .text-slate-200 {
   color: #1E293B !important;
 }
-[data-theme="clean-light"] .text-slate-300 {
+.light .text-slate-300 {
   color: #334155 !important;
 }
-[data-theme="clean-light"] .text-slate-400 {
+.light .text-slate-400 {
   color: #475569 !important;
 }
-[data-theme="clean-light"] .text-slate-500 {
+.light .text-slate-500 {
   color: #64748B !important;
 }
-[data-theme="clean-light"] .bg-obsidian-950 {
+.light .text-slate-600 {
+  color: #94A3B8 !important;
+}
+
+.light .bg-obsidian-950 {
   background-color: var(--color-base) !important;
 }
-[data-theme="clean-light"] .bg-obsidian-900 {
+.light .bg-obsidian-900 {
   background-color: var(--color-surface) !important;
-  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.05), 0 2px 6px -1px rgba(0, 0, 0, 0.03);
 }
-[data-theme="clean-light"] .bg-obsidian-850 {
+.light .bg-obsidian-850 {
   background-color: var(--color-card) !important;
 }
-[data-theme="clean-light"] .border-obsidian-800,
-[data-theme="clean-light"] .border-obsidian-700 {
+.light .border-obsidian-800,
+.light .border-obsidian-750,
+.light .border-obsidian-700 {
   border-color: var(--color-border) !important;
 }
-[data-theme="clean-light"] .bg-grid-pattern {
+
+.light .bg-grid-pattern {
   background-image: 
-    linear-gradient(to right, rgba(0, 0, 0, 0.04) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 0, 0, 0.04) 1px, transparent 1px);
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+}
+
+.light textarea,
+.light input {
+  background-color: #FFFFFF !important;
+  color: #0F172A !important;
+  border-color: #CBD5E1 !important;
+}
+.light textarea::placeholder,
+.light input::placeholder {
+  color: #94A3B8 !important;
 }
 
 @layer base {
   body {
     background-color: var(--color-base);
-    color: #F1F5F9;
-    transition: background-color 0.25s ease, color 0.25s ease;
+    color: var(--color-text-title);
+    transition: background-color 0.2s ease, color 0.2s ease;
   }
 }
 
@@ -134,7 +120,7 @@
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(6px);
+    transform: translateY(4px);
   }
   to {
     opacity: 1;
@@ -143,7 +129,7 @@
 }
 
 .animate-fadeIn {
-  animation: fadeIn 0.3s ease-out forwards;
+  animation: fadeIn 0.25s ease-out forwards;
 }
 
 /* Custom scrollbars */
@@ -152,12 +138,12 @@
   height: 6px;
 }
 ::-webkit-scrollbar-track {
-  background: rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.05);
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(150, 150, 150, 0.2);
+  background: rgba(140, 140, 140, 0.25);
   border-radius: 9999px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(150, 150, 150, 0.4);
+  background: rgba(140, 140, 140, 0.45);
 }

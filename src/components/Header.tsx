@@ -1,7 +1,7 @@
 import React from 'react';
 import { ShieldCheck, Settings, RotateCcw } from 'lucide-react';
 import { AppTheme } from '../types';
-import { ThemeSelector } from './ThemeSelector';
+import { ThemeToggle } from './ThemeToggle';
 
 interface HeaderProps {
   hasReport: boolean;
@@ -9,7 +9,7 @@ interface HeaderProps {
   onOpenSettings: () => void;
   apiKeyConfigured: boolean;
   currentTheme: AppTheme;
-  onSelectTheme: (theme: AppTheme) => void;
+  onToggleTheme: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -18,7 +18,7 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenSettings,
   apiKeyConfigured,
   currentTheme,
-  onSelectTheme,
+  onToggleTheme,
 }) => {
   return (
     <header className="border-b border-obsidian-800 bg-obsidian-950/85 backdrop-blur-md sticky top-0 z-30 px-4 lg:px-8 py-3.5 transition-all">
@@ -45,8 +45,8 @@ export const Header: React.FC<HeaderProps> = ({
 
         {/* Action Controls */}
         <div className="flex items-center gap-2 sm:gap-3">
-          {/* Theme Selector Dropdown */}
-          <ThemeSelector currentTheme={currentTheme} onSelectTheme={onSelectTheme} />
+          {/* Light / Dark Mode Toggle */}
+          <ThemeToggle currentTheme={currentTheme} onToggleTheme={onToggleTheme} />
 
           {hasReport && (
             <button
@@ -63,7 +63,7 @@ export const Header: React.FC<HeaderProps> = ({
             onClick={onOpenSettings}
             className={`flex items-center gap-2 px-3 py-1.5 text-xs font-medium rounded-lg border transition ${
               apiKeyConfigured
-                ? 'bg-amber-500/10 border-amber-500/40 text-amber-300 hover:bg-amber-500/20'
+                ? 'bg-amber-500/10 border-amber-500/40 text-amber-450 hover:bg-amber-500/20'
                 : 'bg-obsidian-850 border-obsidian-700 text-slate-300 hover:bg-obsidian-800'
             }`}
             title="Configure AI API Key & Diagnostic Tone"

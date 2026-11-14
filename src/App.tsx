@@ -21,7 +21,7 @@ export const App: React.FC = () => {
   const [apiKey, setApiKey] = useState<string>('');
   const [tone, setTone] = useState<ToneMode>('candid');
   const [model, setModel] = useState<AiModelChoice>('gemini-2.5-flash');
-  const [theme, setTheme] = useState<AppTheme>('noir-amber');
+  const [theme, setTheme] = useState<AppTheme>('dark');
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -43,8 +43,16 @@ export const App: React.FC = () => {
     if (savedModel) setModel(savedModel);
 
     const savedTheme = localStorage.getItem('chat_theme') as AppTheme;
-    if (savedTheme) setTheme(savedTheme);
+    if (savedTheme === 'light' || savedTheme === 'dark') {
+      setTheme(savedTheme);
+    }
   }, []);
+
+  // Synchronize data-theme and root class
+  useEffect(() => {
+    document.documentElement.className = theme;
+    document.documentElement.setAttribute('data-theme', theme);
+  }, [theme]);
 
   const handleSaveApiKey = (key: string) => {
     setApiKey(key);
@@ -61,9 +69,10 @@ export const App: React.FC = () => {
     localStorage.setItem('gemini_model', newModel);
   };
 
-  const handleChangeTheme = (newTheme: AppTheme) => {
-    setTheme(newTheme);
-    localStorage.setItem('chat_theme', newTheme);
+  const handleToggleTheme = () => {
+    const nextTheme: AppTheme = theme === 'dark' ? 'light' : 'dark';
+    setTheme(nextTheme);
+    localStorage.setItem('chat_theme', nextTheme);
   };
 
   const handleAnalyze = async (rawText: string, scrubPII: boolean) => {
@@ -106,33 +115,11 @@ export const App: React.FC = () => {
     setIsLoading(false);
   };
 
-  // Synchronize data-theme on document element whenever theme changes
-  useEffect(() => {
-    document.documentElement.setAttribute('data-theme', theme);
-  }, [theme]);
-
-  const getThemeClasses = (t: AppTheme) => {
-    switch (t) {
-      case 'clean-light':
-        return 'bg-[#F8FAFC] text-slate-900 bg-grid-pattern selection:bg-indigo-500/20 selection:text-indigo-600';
-      case 'cyber-neon':
-        return 'bg-[#040714] text-slate-100 bg-grid-pattern selection:bg-cyan-500/20 selection:text-cyan-300';
-      case 'linear-luxury':
-        return 'bg-[#09090B] text-slate-100 bg-grid-pattern selection:bg-emerald-500/20 selection:text-emerald-300';
-      case 'classified-dossier':
-        return 'bg-[#0D0F14] text-slate-100 bg-grid-pattern selection:bg-red-500/20 selection:text-red-300 font-mono';
-      case 'noir-amber':
-      default:
-        return 'bg-[#070A10] text-slate-100 bg-grid-pattern selection:bg-amber-500/20 selection:text-amber-300';
-    }
-  };
-
   return (
     <div
-      data-theme={theme}
-      className={`min-h-screen text-slate-100 flex flex-col transition-colors duration-300 ${getThemeClasses(
-        theme
-      )}`}
+      className={`min-h-screen flex flex-col transition-colors duration-200 ${
+        theme === 'light' ? 'light bg-[#F8FAFC]' : 'dark bg-[#080B11]'
+      } bg-grid-pattern selection:bg-amber-500/20`}
     >
       {/* Top Navigation */}
       <Header
@@ -141,7 +128,7 @@ export const App: React.FC = () => {
         onOpenSettings={() => setShowSettings(true)}
         apiKeyConfigured={!!apiKey && apiKey.trim().length > 0}
         currentTheme={theme}
-        onSelectTheme={handleChangeTheme}
+        onToggleTheme={handleToggleTheme}
       />
 
       {/* Main Workspace Body */}
@@ -167,10 +154,10 @@ export const App: React.FC = () => {
       </main>
 
       {/* Bottom Footer */}
-      <footer className="border-t border-obsidian-850 bg-obsidian-950/80 py-6 px-4 text-center text-xs text-slate-500 font-mono">
+      <footer className="border-t border-obsidian-800 bg-obsidian-950/80 py-6 px-4 text-center text-xs text-slate-500 font-mono">
         <div className="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
           <div className="flex items-center gap-1.5 text-slate-400">
-            <ShieldCheck className="w-4 h-4 text-emerald-400" />
+            <ShieldCheck className="w-4 h-4 text-emerald-500" />
             <span>100% Client-Side Privacy: Chats are parsed directly in your browser.</span>
           </div>
           <div>Chat Forensics • Behavioral & Relational Intelligence</div>
