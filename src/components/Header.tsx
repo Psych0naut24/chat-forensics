@@ -30,10 +30,10 @@ export const Header: React.FC<HeaderProps> = ({
           </div>
           <div>
             <div className="flex items-center gap-2">
-              <span className="font-bold tracking-wider text-slate-900 dark:text-slate-100 uppercase text-base font-serif">
+              <span className="font-bold tracking-wider text-slate-900 dark:text-slate-100 uppercase text-sm sm:text-base font-serif">
                 Chat Forensics
               </span>
-              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 dark:bg-amber-500/10 dark:border-amber-500/30 dark:text-amber-400 font-bold tracking-wide">
+              <span className="text-[10px] uppercase font-mono px-2 py-0.5 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 dark:bg-amber-500/10 dark:border-amber-500/30 dark:text-amber-400 font-bold tracking-wide hidden sm:inline-block">
                 Diagnostics
               </span>
             </div>
@@ -44,7 +44,7 @@ export const Header: React.FC<HeaderProps> = ({
         </div>
 
         {/* Action Controls */}
-        <div className="flex items-center gap-2 sm:gap-3">
+        <div className="flex items-center gap-1.5 sm:gap-3">
           {/* Light / Dark Mode Toggle */}
           <ThemeToggle currentTheme={currentTheme} onToggleTheme={onToggleTheme} />
 

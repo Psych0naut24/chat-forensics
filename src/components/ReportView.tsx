@@ -63,14 +63,14 @@ export const ReportView: React.FC<ReportViewProps> = ({
       {/* 1. Case Dossier Header Bar */}
       <div className="bg-obsidian-900 border border-obsidian-800 rounded-2xl p-5 sm:p-7 shadow-xl flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <div className="flex items-center gap-2 mb-1.5">
-            <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 font-bold">
+          <div className="flex flex-wrap items-center gap-2 mb-1.5">
+            <span className="font-mono text-[10px] uppercase tracking-widest px-2 py-0.5 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 dark:bg-emerald-500/10 dark:border-emerald-500/30 dark:text-emerald-400 font-bold">
               Case Closed • Forensic Diagnosis
             </span>
             <span className="font-mono text-[11px] text-slate-500">
               {report.caseMetadata.caseNumber}
             </span>
-            <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-purple-300 font-medium">
+            <span className="font-mono text-[10px] uppercase px-2 py-0.5 rounded bg-purple-50 border border-purple-200 text-purple-700 dark:bg-purple-500/10 dark:border-purple-500/30 dark:text-purple-300 font-medium">
               {report.caseMetadata.depthLevel}
             </span>
           </div>
@@ -86,10 +86,10 @@ export const ReportView: React.FC<ReportViewProps> = ({
           </div>
         </div>
 
-        <div className="flex items-center gap-2.5 w-full sm:w-auto">
+        <div className="flex items-center gap-2 w-full sm:w-auto">
           <button
             onClick={() => setShowTranscriptDrawer(true)}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-white font-mono text-xs font-medium transition"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-white font-mono text-xs font-medium transition"
             title="Inspect raw chat messages and search keywords"
           >
             <FileText className="w-3.5 h-3.5 text-indigo-600 dark:text-amber-400" />
@@ -97,13 +97,13 @@ export const ReportView: React.FC<ReportViewProps> = ({
           </button>
           <button
             onClick={onReset}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-white font-mono text-xs font-medium transition"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 py-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-white font-mono text-xs font-medium transition"
           >
             <span>New Case</span>
           </button>
           <button
             onClick={() => setShowShareModal(true)}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-obsidian-950 font-mono text-xs font-bold transition shadow-md shadow-indigo-600/20 dark:shadow-amber-500/20 cursor-pointer"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3 sm:px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-obsidian-950 font-mono text-xs font-bold transition shadow-md shadow-indigo-600/20 dark:shadow-amber-500/20 cursor-pointer"
             title="Export analysis as PDF, Markdown, JSON, or share card"
           >
             <Share2 className="w-3.5 h-3.5" />

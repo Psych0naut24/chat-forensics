@@ -61,7 +61,7 @@ export const CaseInterrogator: React.FC<CaseInterrogatorProps> = ({
           <div>
             <h3 className="text-base font-bold text-slate-100 font-serif flex items-center gap-2">
               <span>Interrogate the Case File</span>
-              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-purple-500/10 border border-purple-500/30 text-purple-300 font-semibold">
+              <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-purple-50 border border-purple-200 text-purple-700 dark:bg-purple-500/10 dark:border-purple-500/30 dark:text-purple-300 font-semibold">
                 Interactive Forensics
               </span>
             </h3>
@@ -137,7 +137,7 @@ export const CaseInterrogator: React.FC<CaseInterrogatorProps> = ({
             type="text"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Ask any question about this chat... (e.g. 'Why did they take 14 hours to reply on July 5th?')"
+            placeholder="Ask a forensic question about this dynamic..."
             disabled={isLoading}
             className="w-full px-4 py-3 rounded-xl bg-obsidian-950 border border-obsidian-700 text-xs sm:text-sm text-slate-100 placeholder:text-slate-500 focus:outline-none focus:border-amber-500/80 font-sans transition disabled:opacity-50"
           />

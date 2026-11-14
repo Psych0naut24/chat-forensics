@@ -151,12 +151,12 @@ export const ChatInput: React.FC<ChatInputProps> = ({
         <div className="absolute top-0 right-0 w-96 h-96 bg-amber-500/5 rounded-full blur-3xl pointer-events-none" />
 
         {/* Tab Switcher */}
-        <div className="flex items-center justify-between border-b border-obsidian-800 pb-4 mb-5">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between border-b border-obsidian-800 pb-4 mb-5 gap-3">
           <div className="flex items-center gap-2">
             <button
               type="button"
               onClick={() => setActiveTab('upload')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
                 activeTab === 'upload'
                   ? 'bg-indigo-50 border border-indigo-300 text-indigo-700 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300 font-bold'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-obsidian-800/50'
@@ -168,26 +168,26 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             <button
               type="button"
               onClick={() => setActiveTab('paste')}
-              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
+              className={`flex-1 sm:flex-none flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
                 activeTab === 'paste'
                   ? 'bg-indigo-50 border border-indigo-300 text-indigo-700 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300 font-bold'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-obsidian-800/50'
               }`}
             >
               <FileText className="w-4 h-4" />
-              Paste Raw Messages
+              Paste Messages
             </button>
           </div>
 
           {/* PII Scrub Toggle */}
-          <label className="hidden sm:flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none">
+          <label className="flex items-center gap-2 text-xs text-slate-400 cursor-pointer select-none">
             <input
               type="checkbox"
               checked={scrubPII}
               onChange={(e) => setScrubPII(e.target.checked)}
               className="rounded bg-obsidian-950 border-obsidian-700 text-amber-500 focus:ring-amber-500/40"
             />
-            <span className="flex items-center gap-1">
+            <span className="flex items-center gap-1.5">
               <Shield className="w-3.5 h-3.5 text-emerald-400" />
               Scrub Phone Numbers & PII
             </span>
