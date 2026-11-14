@@ -112,7 +112,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
       </div>
 
       {/* 2. Executive Verdict (Hero Card) */}
-      <div className="bg-gradient-to-br from-obsidian-900 via-obsidian-900 to-obsidian-950 border border-amber-500/40 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden space-y-4">
+      <div className="bg-obsidian-900 border border-amber-500/30 rounded-2xl p-6 sm:p-8 shadow-2xl relative overflow-hidden space-y-4">
         <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-3xl pointer-events-none" />
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-obsidian-800 pb-4">
@@ -128,19 +128,19 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-obsidian-950 border border-obsidian-800 shrink-0">
             <span className="text-xs font-mono text-slate-400">Brutality Score:</span>
-            <span className="text-sm font-mono font-bold text-amber-400">
+            <span className="text-sm font-mono font-bold text-amber-450">
               {report.overallVerdict.brutalityScore}/100
             </span>
           </div>
         </div>
 
-        <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl">
+        <p className="text-sm sm:text-base text-slate-300 leading-relaxed max-w-3xl font-normal">
           {report.overallVerdict.summary}
         </p>
 
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-obsidian-950 border border-obsidian-800 text-xs font-mono text-slate-400">
           <span className="text-amber-450 font-semibold">Core Dynamic:</span>
-          <span>{report.overallVerdict.coreDynamic}</span>
+          <span className="text-slate-200">{report.overallVerdict.coreDynamic}</span>
         </div>
       </div>
 
