@@ -19,6 +19,7 @@ export default defineConfig(({ mode }) => {
     '';
 
   return {
+    base: './',
     plugins: [react()],
     define: {
       'import.meta.env.VITE_GEMINI_API_KEY': JSON.stringify(apiKey),
