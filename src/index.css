@@ -230,3 +230,63 @@ html.light .bg-grid-pattern {
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(140, 140, 140, 0.45);
 }
+
+/* ------------------------------------------------------------- */
+/* PRINT / PDF CLINICAL CASE DOSSIER STYLES                      */
+/* ------------------------------------------------------------- */
+@media print {
+  @page {
+    margin: 15mm;
+    size: A4 portrait;
+  }
+
+  body {
+    background-color: #FFFFFF !important;
+    color: #0F172A !important;
+    font-size: 11pt;
+  }
+
+  /* Hide navigation, buttons, modals, and drawers during print */
+  header,
+  footer,
+  nav,
+  button,
+  .no-print,
+  .fixed,
+  form,
+  [title*="Transcript"],
+  [title*="New Case"] {
+    display: none !important;
+  }
+
+  /* Force cards into crisp printable containers */
+  .bg-obsidian-900,
+  .bg-obsidian-950,
+  .bg-obsidian-850 {
+    background-color: #FFFFFF !important;
+    border: 1px solid #CBD5E1 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid;
+    break-inside: avoid;
+  }
+
+  /* Typography print contrast */
+  .text-slate-100,
+  .text-slate-200,
+  .text-slate-300,
+  .text-slate-400 {
+    color: #0F172A !important;
+  }
+
+  .text-amber-450,
+  .text-amber-400,
+  .text-indigo-600,
+  .text-indigo-700 {
+    color: #1E3A8A !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact !important;
+    print-color-adjust: exact !important;
+  }
+}

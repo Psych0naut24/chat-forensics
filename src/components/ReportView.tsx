@@ -24,7 +24,7 @@ import {
   ChatMessage,
   AiModelChoice,
 } from '../types';
-import { ShareableCardModal } from './ShareableCardModal';
+import { ExportModal } from './ExportModal';
 import { CaseInterrogator } from './CaseInterrogator';
 import { RadarScorecard } from './RadarScorecard';
 import { ActivityCharts } from './ActivityCharts';
@@ -103,10 +103,11 @@ export const ReportView: React.FC<ReportViewProps> = ({
           </button>
           <button
             onClick={() => setShowShareModal(true)}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-obsidian-950 font-mono text-xs font-bold transition shadow-md shadow-indigo-600/20 dark:shadow-amber-500/20"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-obsidian-950 font-mono text-xs font-bold transition shadow-md shadow-indigo-600/20 dark:shadow-amber-500/20 cursor-pointer"
+            title="Export analysis as PDF, Markdown, JSON, or share card"
           >
             <Share2 className="w-3.5 h-3.5" />
-            <span>Share Report</span>
+            <span>Export & Share</span>
           </button>
         </div>
       </div>
@@ -679,8 +680,8 @@ export const ReportView: React.FC<ReportViewProps> = ({
         model={model}
       />
 
-      {/* Social Story Modal */}
-      <ShareableCardModal
+      {/* Export & Social Story Modal */}
+      <ExportModal
         isOpen={showShareModal}
         onClose={() => setShowShareModal(false)}
         report={report}
