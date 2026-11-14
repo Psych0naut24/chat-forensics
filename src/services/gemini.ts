@@ -17,15 +17,18 @@ async function callGeminiApi(
 ): Promise<{ ok: boolean; status: number; data?: any; error?: string }> {
   const candidateModels = [
     model,
-    model.includes('pro') ? 'gemini-1.5-pro' : 'gemini-2.0-flash',
-    model.includes('pro') ? 'gemini-2.0-flash' : 'gemini-1.5-flash',
+    model.includes('pro') ? 'gemini-3.8-pro' : 'gemini-3.8-flash',
+    model.includes('pro') ? 'gemini-3.5-pro' : 'gemini-3.5-flash',
+    model.includes('pro') ? 'gemini-3.0-pro' : 'gemini-3.0-flash',
+    'gemini-3.8-flash',
   ];
 
   const uniqueModels = Array.from(new Set(candidateModels));
   let lastError = 'Failed to reach Gemini API';
   let lastStatus = 500;
 
-  for (const candidate of uniqueModels) {
+  for (let i = 0; i < uniqueModels.length; i++) {
+    const candidate = uniqueModels[i];
     try {
       const url = `https://generativelanguage.googleapis.com/v1beta/models/${candidate}:generateContent?key=${apiKey.trim()}`;
       const res = await fetch(url, {
@@ -43,14 +46,26 @@ async function callGeminiApi(
       lastStatus = res.status;
       lastError = errJson?.error?.message || res.statusText || `HTTP ${res.status}`;
 
-      // If model not found (404), try next candidate
-      if (res.status === 404) {
-        console.warn(`Model ${candidate} returned 404, trying next candidate...`);
+      // If Google recommends a specific model dynamically, add it to candidates and try it!
+      const recMatch = lastError.match(/models\/(gemini-[a-zA-Z0-9.-]+)/);
+      if (recMatch && recMatch[1] && !uniqueModels.includes(recMatch[1])) {
+        uniqueModels.push(recMatch[1]);
         continue;
       }
 
-      // If API key is invalid (400) or unauthorized (403), stop early
-      if (res.status === 400 || res.status === 403) {
+      // If model not found or deprecated, try next candidate
+      if (
+        res.status === 404 ||
+        lastError.includes('no longer available') ||
+        lastError.includes('not found') ||
+        lastError.includes('not supported')
+      ) {
+        console.warn(`Model ${candidate} unavailable: ${lastError}. Trying next candidate...`);
+        continue;
+      }
+
+      // If API key is rejected as invalid (and not a model issue), break
+      if ((res.status === 400 && lastError.includes('API_KEY_INVALID')) || res.status === 403) {
         break;
       }
     } catch (netErr: any) {
@@ -71,7 +86,7 @@ export async function analyzeChatWithGemini(
   metrics: ChatMetrics,
   apiKey?: string,
   tone: ToneMode = 'candid',
-  model: AiModelChoice = 'gemini-2.5-flash'
+  model: AiModelChoice = 'gemini-3.8-flash'
 ): Promise<DiagnosticReport> {
   const fallback = generateDiagnosticReport(metrics, 'Deep Clinical Psychology');
 
@@ -84,7 +99,7 @@ export async function analyzeChatWithGemini(
     const s1 = metrics.stats[p1];
     const s2 = metrics.stats[p2];
 
-    const sampleLimit = model === 'gemini-2.5-pro' ? 1200 : 250;
+    const sampleLimit = model === 'gemini-3.8-pro' ? 1200 : 250;
     const sampleExcerpts = sampleChatExcerpts(messages, sampleLimit);
 
     const toneInstructions = {
@@ -371,7 +386,7 @@ export async function interrogateCase(
   report: DiagnosticReport,
   question: string,
   apiKey?: string,
-  model: AiModelChoice = 'gemini-2.5-flash'
+  model: AiModelChoice = 'gemini-3.8-flash'
 ): Promise<string> {
   const localAnswer = generateLocalForensicAnswer(question, messages, metrics, report);
 

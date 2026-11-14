@@ -138,5 +138,5 @@ export interface DiagnosticReport {
 }
 
 export type ToneMode = 'candid' | 'constructive' | 'analytical';
-export type AiModelChoice = 'gemini-2.5-flash' | 'gemini-2.5-pro';
+export type AiModelChoice = 'gemini-3.8-flash' | 'gemini-3.8-pro';
 export type AppTheme = 'dark' | 'light';

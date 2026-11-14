@@ -117,7 +117,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </p>
           </div>
 
-          {/* Section 2: Model Choice (2.5 Flash vs 2.5 Pro) */}
+          {/* Section 2: Model Choice (3.8 Flash vs 3.8 Pro) */}
           <div className="space-y-2.5">
             <div className="flex items-center justify-between">
               <label className="text-xs font-bold text-slate-200 uppercase tracking-wider font-mono flex items-center gap-1.5">
@@ -128,12 +128,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
 
             <div className="grid grid-cols-2 gap-3">
-              {/* Option 1: Gemini 2.5 Flash */}
+              {/* Option 1: Gemini 3.8 Flash */}
               <button
                 type="button"
-                onClick={() => onChangeModel('gemini-2.5-flash')}
+                onClick={() => onChangeModel('gemini-3.8-flash')}
                 className={`p-3.5 rounded-xl text-left transition flex items-start justify-between cursor-pointer ${
-                  model === 'gemini-2.5-flash'
+                  model === 'gemini-3.8-flash'
                     ? 'border-2 border-amber-500 bg-amber-50/90 dark:bg-amber-500/15 ring-2 ring-amber-500/25 shadow-sm'
                     : 'border border-slate-200 dark:border-obsidian-800 bg-white dark:bg-obsidian-950 hover:border-slate-300 dark:hover:border-obsidian-700'
                 }`}
@@ -142,16 +142,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-xs font-bold font-mono ${
-                        model === 'gemini-2.5-flash'
+                        model === 'gemini-3.8-flash'
                           ? 'text-amber-950 dark:text-amber-200'
                           : 'text-slate-700 dark:text-slate-300'
                       }`}
                     >
-                      2.5 Flash
+                      3.8 Flash
                     </span>
                     <span
                       className={`text-[9px] uppercase px-1.5 py-0.5 rounded font-bold font-mono ${
-                        model === 'gemini-2.5-flash'
+                        model === 'gemini-3.8-flash'
                           ? 'bg-amber-500 text-white dark:bg-amber-500/25 dark:text-amber-300'
                           : 'bg-slate-100 text-slate-600 dark:bg-obsidian-850 dark:text-slate-400'
                       }`}
@@ -161,14 +161,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   </div>
                   <div
                     className={`text-[11px] mt-1.5 leading-snug ${
-                      model === 'gemini-2.5-flash'
+                      model === 'gemini-3.8-flash'
                         ? 'text-amber-900/90 dark:text-slate-300'
                         : 'text-slate-500'
                     }`}
                   >
                     High-speed synthesis & standard sampling.
                   </div>
-                  {model === 'gemini-2.5-flash' && (
+                  {model === 'gemini-3.8-flash' && (
                     <div className="mt-2 inline-flex items-center gap-1 text-[9px] font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                       Active Selection
@@ -179,21 +179,21 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 {/* Selection Indicator Circle */}
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ml-2 transition ${
-                    model === 'gemini-2.5-flash'
+                    model === 'gemini-3.8-flash'
                       ? 'bg-amber-500 text-white dark:text-obsidian-950 shadow-sm'
                       : 'border-2 border-slate-300 dark:border-obsidian-750 bg-slate-50 dark:bg-obsidian-900'
                   }`}
                 >
-                  {model === 'gemini-2.5-flash' && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                  {model === 'gemini-3.8-flash' && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                 </div>
               </button>
 
-              {/* Option 2: Gemini 2.5 Pro */}
+              {/* Option 2: Gemini 3.8 Pro */}
               <button
                 type="button"
-                onClick={() => onChangeModel('gemini-2.5-pro')}
+                onClick={() => onChangeModel('gemini-3.8-pro')}
                 className={`p-3.5 rounded-xl text-left transition flex items-start justify-between cursor-pointer ${
-                  model === 'gemini-2.5-pro'
+                  model === 'gemini-3.8-pro'
                     ? 'border-2 border-amber-500 bg-amber-50/90 dark:bg-amber-500/15 ring-2 ring-amber-500/25 shadow-sm'
                     : 'border border-slate-200 dark:border-obsidian-800 bg-white dark:bg-obsidian-950 hover:border-slate-300 dark:hover:border-obsidian-700'
                 }`}
@@ -202,16 +202,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   <div className="flex items-center gap-2">
                     <span
                       className={`text-xs font-bold font-mono ${
-                        model === 'gemini-2.5-pro'
+                        model === 'gemini-3.8-pro'
                           ? 'text-amber-950 dark:text-amber-200'
                           : 'text-slate-700 dark:text-slate-300'
                       }`}
                     >
-                      2.5 Pro
+                      3.8 Pro
                     </span>
                     <span
                       className={`text-[9px] uppercase px-1.5 py-0.5 rounded font-bold font-mono ${
-                        model === 'gemini-2.5-pro'
+                        model === 'gemini-3.8-pro'
                           ? 'bg-purple-600 text-white dark:bg-purple-500/25 dark:text-purple-300'
                           : 'bg-slate-100 text-slate-600 dark:bg-obsidian-850 dark:text-slate-400'
                       }`}
@@ -221,14 +221,14 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                   </div>
                   <div
                     className={`text-[11px] mt-1.5 leading-snug ${
-                      model === 'gemini-2.5-pro'
+                      model === 'gemini-3.8-pro'
                         ? 'text-amber-900/90 dark:text-slate-300'
                         : 'text-slate-500'
                     }`}
                   >
                     Deep clinical reasoning for multi-year logs.
                   </div>
-                  {model === 'gemini-2.5-pro' && (
+                  {model === 'gemini-3.8-pro' && (
                     <div className="mt-2 inline-flex items-center gap-1 text-[9px] font-mono font-bold uppercase tracking-wider text-amber-600 dark:text-amber-400">
                       <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
                       Active Selection
@@ -239,12 +239,12 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 {/* Selection Indicator Circle */}
                 <div
                   className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ml-2 transition ${
-                    model === 'gemini-2.5-pro'
+                    model === 'gemini-3.8-pro'
                       ? 'bg-amber-500 text-white dark:text-obsidian-950 shadow-sm'
                       : 'border-2 border-slate-300 dark:border-obsidian-750 bg-slate-50 dark:bg-obsidian-900'
                   }`}
                 >
-                  {model === 'gemini-2.5-pro' && <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                  {model === 'gemini-3.8-pro' && <Check className="w-3.5 h-3.5 stroke-[3]" />}
                 </div>
               </button>
             </div>

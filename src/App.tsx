@@ -20,7 +20,7 @@ import { ShieldCheck } from 'lucide-react';
 export const App: React.FC = () => {
   const [apiKey, setApiKey] = useState<string>('');
   const [tone, setTone] = useState<ToneMode>('candid');
-  const [model, setModel] = useState<AiModelChoice>('gemini-2.5-flash');
+  const [model, setModel] = useState<AiModelChoice>('gemini-3.8-flash');
   const [theme, setTheme] = useState<AppTheme>('dark');
   const [showSettings, setShowSettings] = useState<boolean>(false);
 
@@ -39,8 +39,16 @@ export const App: React.FC = () => {
     const savedTone = localStorage.getItem('chat_tone') as ToneMode;
     if (savedTone) setTone(savedTone);
 
-    const savedModel = localStorage.getItem('gemini_model') as AiModelChoice;
-    if (savedModel) setModel(savedModel);
+    const savedModel = localStorage.getItem('gemini_model');
+    if (savedModel === 'gemini-3.8-flash' || savedModel === 'gemini-3.8-pro') {
+      setModel(savedModel);
+    } else if (savedModel && savedModel.includes('pro')) {
+      setModel('gemini-3.8-pro');
+      localStorage.setItem('gemini_model', 'gemini-3.8-pro');
+    } else {
+      setModel('gemini-3.8-flash');
+      localStorage.setItem('gemini_model', 'gemini-3.8-flash');
+    }
 
     const savedTheme = localStorage.getItem('chat_theme') as AppTheme;
     if (savedTheme === 'light' || savedTheme === 'dark') {
