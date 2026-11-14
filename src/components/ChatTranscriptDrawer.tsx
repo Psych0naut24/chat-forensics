@@ -34,7 +34,7 @@ export const ChatTranscriptDrawer: React.FC<ChatTranscriptDrawerProps> = ({
         {/* Top Header */}
         <div className="p-4 sm:p-5 border-b border-obsidian-800 flex items-center justify-between">
           <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-450">
+            <div className="w-8 h-8 rounded-lg bg-indigo-50 border border-indigo-200 text-indigo-600 dark:bg-amber-500/10 dark:border-amber-500/30 dark:text-amber-450">
               <MessageSquare className="w-4 h-4" />
             </div>
             <div>
@@ -73,7 +73,7 @@ export const ChatTranscriptDrawer: React.FC<ChatTranscriptDrawerProps> = ({
               onClick={() => setSelectedSender('all')}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition ${
                 selectedSender === 'all'
-                  ? 'bg-amber-500 text-obsidian-950 font-bold'
+                  ? 'bg-indigo-600 text-white font-bold dark:bg-amber-500 dark:text-obsidian-950'
                   : 'bg-obsidian-900 text-slate-400 border border-obsidian-800'
               }`}
             >
@@ -83,7 +83,7 @@ export const ChatTranscriptDrawer: React.FC<ChatTranscriptDrawerProps> = ({
               onClick={() => setSelectedSender(p1)}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition ${
                 selectedSender === p1
-                  ? 'bg-amber-500 text-obsidian-950 font-bold'
+                  ? 'bg-indigo-600 text-white font-bold dark:bg-amber-500 dark:text-obsidian-950'
                   : 'bg-obsidian-900 text-slate-400 border border-obsidian-800'
               }`}
             >
@@ -93,7 +93,7 @@ export const ChatTranscriptDrawer: React.FC<ChatTranscriptDrawerProps> = ({
               onClick={() => setSelectedSender(p2)}
               className={`px-3 py-1 rounded-lg text-xs font-mono transition ${
                 selectedSender === p2
-                  ? 'bg-amber-500 text-obsidian-950 font-bold'
+                  ? 'bg-indigo-600 text-white font-bold dark:bg-amber-500 dark:text-obsidian-950'
                   : 'bg-obsidian-900 text-slate-400 border border-obsidian-800'
               }`}
             >
@@ -119,7 +119,7 @@ export const ChatTranscriptDrawer: React.FC<ChatTranscriptDrawerProps> = ({
                   }`}
                 >
                   <div className="flex items-center justify-between text-[10px] text-slate-500">
-                    <span className={`font-bold ${isP1 ? 'text-amber-400' : 'text-slate-300'}`}>
+                    <span className={`font-bold ${isP1 ? 'text-indigo-700 dark:text-amber-400 font-bold' : 'text-slate-300'}`}>
                       {m.sender}
                     </span>
                     <span>

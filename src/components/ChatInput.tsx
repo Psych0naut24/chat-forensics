@@ -63,7 +63,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
     <div className="w-full max-w-4xl mx-auto space-y-8 animate-fadeIn">
       {/* Hero Intro */}
       <div className="text-center space-y-3 pt-6 sm:pt-10">
-        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/30 text-amber-400 text-xs font-mono uppercase tracking-wider">
+        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-50 border border-indigo-200 text-indigo-700 dark:bg-amber-500/10 dark:border-amber-500/30 dark:text-amber-400 text-xs font-mono uppercase tracking-wider font-bold">
           <Sparkles className="w-3.5 h-3.5" />
           Conversational Forensics & Diagnostic Intelligence
         </div>
@@ -86,7 +86,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           ) : (
             <>
               <div className="flex items-center gap-2">
-                <span className="w-2 h-2 rounded-full bg-amber-450 animate-pulse" />
+                <span className="w-2 h-2 rounded-full bg-indigo-600 dark:bg-amber-450 animate-pulse" />
                 <span className="text-[11px] text-slate-300">
                   <strong>Deep AI Mode:</strong> Add your free Gemini API key in <em>API Settings</em> (top right) to unlock full relational psychological synthesis and interactive Q&A.
                 </span>
@@ -95,7 +95,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
                 href="https://aistudio.google.com/app/apikey"
                 target="_blank"
                 rel="noreferrer"
-                className="text-[11px] font-mono text-amber-400 hover:text-amber-300 underline underline-offset-2 shrink-0 font-semibold"
+                className="text-[11px] font-mono text-indigo-700 hover:text-indigo-800 dark:text-amber-400 dark:hover:text-amber-300 underline underline-offset-2 shrink-0 font-bold"
               >
                 Get Free Key &rarr;
               </a>
@@ -110,7 +110,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           <span className="text-xs uppercase font-mono tracking-wider text-slate-400 font-semibold">
             Try a Pre-Packaged Case File (Instant 1-Click)
           </span>
-          <span className="text-[11px] text-amber-400/80 font-mono">Zero setup required</span>
+          <span className="text-[11px] text-indigo-600 dark:text-amber-400/80 font-mono font-semibold">Zero setup required</span>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3.5">
           {SAMPLE_CHATS.map((sample) => (
@@ -122,21 +122,21 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20">
+                  <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/20 font-bold">
                     {sample.tag}
                   </span>
                   <span className="text-[11px] font-mono text-slate-400">
                     {sample.participants.join(' & ')}
                   </span>
                 </div>
-                <h4 className="text-sm font-bold text-slate-200 group-hover:text-amber-300 transition">
+                <h4 className="text-sm font-bold text-slate-200 group-hover:text-indigo-600 dark:group-hover:text-amber-300 transition">
                   {sample.title}
                 </h4>
                 <p className="text-xs text-slate-400 mt-1 line-clamp-2 leading-relaxed">
                   {sample.subtitle}
                 </p>
               </div>
-              <div className="mt-3.5 pt-2.5 border-t border-obsidian-800/80 flex items-center justify-between text-[11px] font-mono text-amber-400 group-hover:translate-x-0.5 transition-transform">
+              <div className="mt-3.5 pt-2.5 border-t border-obsidian-800/80 flex items-center justify-between text-[11px] font-mono text-indigo-700 dark:text-amber-400 font-bold group-hover:translate-x-0.5 transition-transform">
                 <span>Run Diagnostic</span>
                 <ArrowRight className="w-3 h-3" />
               </div>
@@ -158,7 +158,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               onClick={() => setActiveTab('upload')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
                 activeTab === 'upload'
-                  ? 'bg-amber-500/15 border border-amber-500/40 text-amber-300'
+                  ? 'bg-indigo-50 border border-indigo-300 text-indigo-700 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300 font-bold'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-obsidian-800/50'
               }`}
             >
@@ -170,7 +170,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
               onClick={() => setActiveTab('paste')}
               className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-semibold tracking-wide transition ${
                 activeTab === 'paste'
-                  ? 'bg-amber-500/15 border border-amber-500/40 text-amber-300'
+                  ? 'bg-indigo-50 border border-indigo-300 text-indigo-700 dark:bg-amber-500/15 dark:border-amber-500/40 dark:text-amber-300 font-bold'
                   : 'text-slate-400 hover:text-slate-200 hover:bg-obsidian-800/50'
               }`}
             >
@@ -206,7 +206,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             onClick={() => fileInputRef.current?.click()}
             className={`border-2 border-dashed rounded-xl p-8 sm:p-12 text-center cursor-pointer transition-all ${
               dragOver
-                ? 'border-amber-500 bg-amber-500/10'
+                ? 'border-indigo-500 bg-indigo-50/50 dark:border-amber-500 dark:bg-amber-500/10'
                 : 'border-obsidian-700 bg-obsidian-950/60 hover:border-obsidian-600 hover:bg-obsidian-950'
             }`}
           >
@@ -231,7 +231,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             ) : (
               <div className="space-y-1.5">
                 <p className="text-sm font-medium text-slate-200">
-                  Drop your WhatsApp export here, or <span className="text-amber-400 underline underline-offset-4">browse files</span>
+                  Drop your WhatsApp export here, or <span className="text-indigo-600 underline underline-offset-4 dark:text-amber-400 font-bold">browse files</span>
                 </p>
                 <p className="text-xs text-slate-400 max-w-sm mx-auto">
                   Export chat without media from WhatsApp on iOS or Android (produces a .txt file).
@@ -265,7 +265,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             className={`w-full sm:w-auto px-6 py-3 rounded-xl font-mono text-xs uppercase tracking-wider font-bold transition flex items-center justify-center gap-2 shadow-xl ${
               isLoading || (activeTab === 'upload' && !fileContent) || (activeTab === 'paste' && !pastedText.trim())
                 ? 'bg-obsidian-800 text-slate-500 cursor-not-allowed border border-obsidian-700'
-                : 'bg-gradient-to-r from-amber-500 to-amber-600 text-obsidian-950 hover:from-amber-400 hover:to-amber-500 shadow-amber-500/20 cursor-pointer'
+                : 'bg-indigo-600 hover:bg-indigo-700 text-white shadow-md shadow-indigo-600/20 dark:bg-gradient-to-r dark:from-amber-500 dark:to-amber-600 dark:text-obsidian-950 dark:hover:from-amber-400 dark:hover:to-amber-500 dark:shadow-amber-500/20 font-bold cursor-pointer'
             }`}
           >
             {isLoading ? (

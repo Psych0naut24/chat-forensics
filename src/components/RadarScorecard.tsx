@@ -101,7 +101,7 @@ export const RadarScorecard: React.FC<RadarScorecardProps> = ({ scorecard, parti
             >
               <div>
                 <div className="flex items-center justify-between mb-2">
-                  <div className="w-7 h-7 rounded-lg bg-obsidian-900 border border-obsidian-800 flex items-center justify-center text-amber-400">
+                  <div className="w-7 h-7 rounded-lg bg-obsidian-900 border border-obsidian-800 flex items-center justify-center text-indigo-600 dark:text-amber-400">
                     <Icon className="w-3.5 h-3.5" />
                   </div>
                   <span className="text-xs font-mono font-bold text-slate-200">
@@ -115,11 +115,11 @@ export const RadarScorecard: React.FC<RadarScorecardProps> = ({ scorecard, parti
               <div className="space-y-1.5 pt-2 border-t border-obsidian-900">
                 <div className="w-full h-1.5 rounded-full bg-obsidian-900 overflow-hidden">
                   <div
-                    className="h-full bg-gradient-to-r from-amber-500 to-amber-400 transition-all duration-500"
+                    className="h-full bg-gradient-to-r from-indigo-600 to-indigo-500 dark:from-amber-500 dark:to-amber-400 transition-all duration-500"
                     style={{ width: `${p.score}%` }}
                   />
                 </div>
-                <span className="text-[10px] font-mono text-amber-400/90 block">
+                <span className="text-[10px] font-mono text-indigo-600 dark:text-indigo-700 dark:text-amber-400/90 font-bold block">
                   {p.grade}
                 </span>
               </div>

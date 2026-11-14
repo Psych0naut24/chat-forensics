@@ -76,7 +76,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           </div>
           <h2 className="text-xl sm:text-2xl font-bold font-serif text-slate-100 flex items-center gap-2">
             <span>{p1}</span>
-            <span className="text-amber-450 font-sans font-light">vs</span>
+            <span className="text-indigo-600 dark:text-amber-450 font-sans font-light">vs</span>
             <span>{p2}</span>
           </h2>
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-1 text-xs text-slate-400 font-mono">
@@ -92,7 +92,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
             className="flex-1 sm:flex-none flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-obsidian-850 hover:bg-obsidian-800 border border-obsidian-700 text-slate-300 hover:text-white font-mono text-xs font-medium transition"
             title="Inspect raw chat messages and search keywords"
           >
-            <FileText className="w-3.5 h-3.5 text-amber-400" />
+            <FileText className="w-3.5 h-3.5 text-indigo-600 dark:text-amber-400" />
             <span>Transcript</span>
           </button>
           <button
@@ -103,7 +103,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           </button>
           <button
             onClick={() => setShowShareModal(true)}
-            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-obsidian-950 font-mono text-xs font-bold transition shadow-lg shadow-amber-500/20"
+            className="flex-1 sm:flex-none flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white dark:bg-amber-500 dark:hover:bg-amber-400 dark:text-obsidian-950 font-mono text-xs font-bold transition shadow-md shadow-indigo-600/20 dark:shadow-amber-500/20"
           >
             <Share2 className="w-3.5 h-3.5" />
             <span>Share Report</span>
@@ -117,7 +117,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-obsidian-800 pb-4">
           <div className="space-y-1">
-            <span className="text-[10px] uppercase font-mono tracking-wider text-amber-450 font-semibold flex items-center gap-1.5">
+            <span className="text-[10px] uppercase font-mono tracking-wider text-indigo-700 dark:text-amber-450 font-bold flex items-center gap-1.5">
               <Sparkles className="w-3.5 h-3.5" />
               Executive Diagnostic Verdict
             </span>
@@ -128,7 +128,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
           <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-xl bg-obsidian-950 border border-obsidian-800 shrink-0">
             <span className="text-xs font-mono text-slate-400">Brutality Score:</span>
-            <span className="text-sm font-mono font-bold text-amber-450">
+            <span className="text-sm font-mono font-bold text-indigo-700 dark:text-amber-450">
               {report.overallVerdict.brutalityScore}/100
             </span>
           </div>
@@ -139,7 +139,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
         </p>
 
         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg bg-obsidian-950 border border-obsidian-800 text-xs font-mono text-slate-400">
-          <span className="text-amber-450 font-semibold">Core Dynamic:</span>
+          <span className="text-indigo-700 dark:text-amber-450 font-bold">Core Dynamic:</span>
           <span className="text-slate-200">{report.overallVerdict.coreDynamic}</span>
         </div>
       </div>
@@ -170,7 +170,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
               >
                 <div className="space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-amber-500/10 text-amber-300 border border-amber-500/20 font-bold">
+                    <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/20 font-bold">
                       Chapter {epoch.chapterNumber}
                     </span>
                     <span className="text-xs font-mono font-bold text-slate-300">
@@ -182,7 +182,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
                   <p className="text-xs text-slate-300 leading-relaxed pt-1">{epoch.summary}</p>
                 </div>
 
-                <div className="p-2.5 rounded-lg bg-obsidian-900 border border-obsidian-800/80 text-[11px] font-mono text-amber-400/90 italic">
+                <div className="p-2.5 rounded-lg bg-obsidian-900 border border-obsidian-800/80 text-[11px] font-mono text-indigo-950 dark:text-amber-400/90 italic">
                   "{epoch.keyMomentQuote}"
                 </div>
               </div>
@@ -213,7 +213,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
             {/* Person A Profile */}
             <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-800 space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase text-amber-400 font-bold">{p1}</span>
+                <span className="text-xs font-mono uppercase text-indigo-700 dark:text-amber-400 font-bold">{p1}</span>
                 <span className="text-xs font-mono px-2 py-0.5 rounded bg-obsidian-900 border border-obsidian-700 text-slate-200">
                   {report.attachmentDynamics.personA.style}
                 </span>
@@ -238,7 +238,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
             {/* Person B Profile */}
             <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-800 space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-xs font-mono uppercase text-amber-400 font-bold">{p2}</span>
+                <span className="text-xs font-mono uppercase text-indigo-700 dark:text-amber-400 font-bold">{p2}</span>
                 <span className="text-xs font-mono px-2 py-0.5 rounded bg-obsidian-900 border border-obsidian-700 text-slate-200">
                   {report.attachmentDynamics.personB.style}
                 </span>
@@ -262,8 +262,8 @@ export const ReportView: React.FC<ReportViewProps> = ({
           </div>
 
           {/* Systemic Loop */}
-          <div className="p-3.5 rounded-xl bg-purple-950/20 border border-purple-500/20 text-xs text-purple-200/90 leading-relaxed font-mono">
-            <strong className="text-purple-300 uppercase block mb-0.5 text-[10px]">The Systemic Feedback Loop:</strong>
+          <div className="p-3.5 rounded-xl bg-purple-50 border border-purple-200 text-xs text-purple-950 dark:bg-purple-950/20 dark:border-purple-500/20 dark:text-purple-200/90 leading-relaxed font-mono">
+            <strong className="text-purple-900 dark:text-purple-300 uppercase block mb-0.5 text-[10px] font-bold">The Systemic Feedback Loop:</strong>
             {report.attachmentDynamics.systemicLoop}
           </div>
         </div>
@@ -303,7 +303,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
                 ) : (
                   report.gottmanAnalysis.frictionMarkers.map((marker, idx) => (
                     <div key={idx} className="text-xs text-slate-300">
-                      <strong className="text-amber-400 font-mono">[{marker.type}]</strong> by {marker.instigator}: {marker.analysis}
+                      <strong className="text-rose-700 dark:text-amber-400 font-mono font-bold">[{marker.type}]</strong> by {marker.instigator}: {marker.analysis}
                     </div>
                   ))
                 )}
@@ -325,7 +325,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
               <p className="text-xs text-slate-400">Measured through initiation pacing, response latency, and word volume disparity</p>
             </div>
           </div>
-          <span className="text-xs font-mono uppercase px-2.5 py-1 rounded bg-amber-500/10 text-amber-300 border border-amber-500/30 font-semibold">
+          <span className="text-xs font-mono uppercase px-2.5 py-1 rounded bg-indigo-50 text-indigo-700 border border-indigo-200 dark:bg-amber-500/10 dark:text-amber-300 dark:border-amber-500/30 font-bold">
             {report.powerDynamic.dominantParticipant === 'Equal Balance'
               ? 'Balanced Dynamic'
               : `${report.powerDynamic.dominantParticipant} Holds Leverage`}
@@ -342,7 +342,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           <div className="w-full h-3 rounded-full bg-obsidian-950 border border-obsidian-800 overflow-hidden relative flex">
             <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-slate-600 z-10 -translate-x-1/2" />
             <div
-              className="bg-amber-500 h-full transition-all duration-500"
+              className="bg-indigo-600 dark:bg-amber-500 h-full transition-all duration-500"
               style={{ width: `${s1.initiationPercentage}%` }}
             />
             <div
@@ -394,7 +394,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
             {report.inflectionPoint.description}
           </p>
-          <div className="text-[11px] font-mono text-amber-400/90 pt-1 flex items-center gap-1.5">
+          <div className="text-[11px] font-mono text-indigo-700 dark:text-amber-400/90 pt-1 flex items-center gap-1.5 font-semibold">
             <span className="text-slate-500">Trigger Indicator:</span>
             <span>"{report.inflectionPoint.quoteOrTrigger}"</span>
           </div>
@@ -407,8 +407,8 @@ export const ReportView: React.FC<ReportViewProps> = ({
             </div>
             <div className="text-xs text-slate-300">{report.inflectionPoint.beforeVibe}</div>
           </div>
-          <div className="p-3.5 rounded-xl bg-obsidian-950/70 border border-amber-500/20 space-y-1">
-            <div className="text-[10px] font-mono uppercase text-amber-400 font-semibold">
+          <div className="p-3.5 rounded-xl bg-obsidian-950/70 border border-indigo-200 dark:border-amber-500/20 space-y-1">
+            <div className="text-[10px] font-mono uppercase text-indigo-700 dark:text-amber-400 font-bold">
               After the Shift
             </div>
             <div className="text-xs text-slate-300">{report.inflectionPoint.afterVibe}</div>
@@ -425,7 +425,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           <div className="p-4 rounded-xl bg-obsidian-900 border border-obsidian-800 space-y-2 shadow-lg">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
-                <MessageSquare className="w-3.5 h-3.5 text-amber-400" />
+                <MessageSquare className="w-3.5 h-3.5 text-indigo-600 dark:text-amber-400" />
                 Initiation Ratio (&gt;4h gap)
               </span>
             </div>
@@ -445,7 +445,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           <div className="p-4 rounded-xl bg-obsidian-900 border border-obsidian-800 space-y-2 shadow-lg">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-amber-400" />
+                <Clock className="w-3.5 h-3.5 text-indigo-600 dark:text-amber-400" />
                 Median Response Time
               </span>
             </div>
@@ -462,7 +462,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           <div className="p-4 rounded-xl bg-obsidian-900 border border-obsidian-800 space-y-2 shadow-lg">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
-                <FileText className="w-3.5 h-3.5 text-amber-400" />
+                <FileText className="w-3.5 h-3.5 text-indigo-600 dark:text-amber-400" />
                 Word Volume Share
               </span>
             </div>
@@ -482,7 +482,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           <div className="p-4 rounded-xl bg-obsidian-900 border border-obsidian-800 space-y-2 shadow-lg">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
-                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+                <AlertTriangle className="w-3.5 h-3.5 text-indigo-600 dark:text-amber-400" />
                 Double-Text Chases
               </span>
             </div>
@@ -497,7 +497,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           <div className="p-4 rounded-xl bg-obsidian-900 border border-obsidian-800 space-y-2 shadow-lg">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
-                <Moon className="w-3.5 h-3.5 text-amber-400" />
+                <Moon className="w-3.5 h-3.5 text-indigo-600 dark:text-amber-400" />
                 Night-Owl Messages (11PM-5AM)
               </span>
             </div>
@@ -512,7 +512,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
           <div className="p-4 rounded-xl bg-obsidian-900 border border-obsidian-800 space-y-2 shadow-lg">
             <div className="flex items-center justify-between text-xs font-mono text-slate-400">
               <span className="flex items-center gap-1.5">
-                <HelpCircle className="w-3.5 h-3.5 text-amber-400" />
+                <HelpCircle className="w-3.5 h-3.5 text-indigo-600 dark:text-amber-400" />
                 Curiosity & Questions Asked
               </span>
             </div>
@@ -643,7 +643,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-800 space-y-1.5">
-            <div className="text-xs font-mono uppercase text-amber-400 font-bold">
+            <div className="text-xs font-mono uppercase text-indigo-700 dark:text-amber-400 font-bold">
               Direct Counsel for {p1}
             </div>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -651,7 +651,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
             </p>
           </div>
           <div className="p-4 rounded-xl bg-obsidian-950 border border-obsidian-800 space-y-1.5">
-            <div className="text-xs font-mono uppercase text-amber-400 font-bold">
+            <div className="text-xs font-mono uppercase text-indigo-700 dark:text-amber-400 font-bold">
               Direct Counsel for {p2}
             </div>
             <p className="text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -661,7 +661,7 @@ export const ReportView: React.FC<ReportViewProps> = ({
         </div>
 
         <div className="p-5 rounded-xl bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent border-l-4 border-amber-450 border-y border-r border-obsidian-800 space-y-1">
-          <span className="text-[10px] uppercase font-mono tracking-widest text-amber-400 font-bold">
+          <span className="text-[10px] uppercase font-mono tracking-widest text-indigo-700 dark:text-amber-400 font-bold">
             The Bottom Line
           </span>
           <p className="text-sm sm:text-base font-serif italic text-slate-100 leading-relaxed">
