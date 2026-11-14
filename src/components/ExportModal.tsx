@@ -247,66 +247,147 @@ export const ExportModal: React.FC<ExportModalProps> = ({
           <div className="mt-4 flex flex-col items-center space-y-4">
             <div
               ref={cardRef}
-              className="w-full max-w-xs rounded-2xl bg-gradient-to-b from-slate-900 via-obsidian-950 to-black border-2 border-amber-500/40 p-5 shadow-2xl space-y-4 text-white"
+              className="w-full max-w-xs rounded-2xl p-5 shadow-2xl space-y-4 border-2 select-none"
+              style={{
+                background: 'linear-gradient(180deg, #0F172A 0%, #030712 100%)',
+                borderColor: 'rgba(245, 158, 11, 0.45)',
+                color: '#FFFFFF',
+              }}
             >
               {/* Card Header */}
-              <div className="flex items-center justify-between border-b border-obsidian-800/80 pb-3">
+              <div
+                className="flex items-center justify-between pb-3"
+                style={{ borderBottom: '1px solid rgba(255, 255, 255, 0.12)' }}
+              >
                 <div className="flex items-center gap-2">
-                  <div className="w-6 h-6 rounded-md bg-amber-500/20 border border-amber-500/40 flex items-center justify-center text-amber-400">
+                  <div
+                    className="w-6 h-6 rounded-md flex items-center justify-center"
+                    style={{
+                      backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                      border: '1px solid rgba(245, 158, 11, 0.4)',
+                      color: '#FBBF24',
+                    }}
+                  >
                     <ShieldCheck className="w-3.5 h-3.5" />
                   </div>
-                  <span className="font-serif font-bold text-xs uppercase tracking-wider text-slate-200">
+                  <span
+                    className="font-serif font-bold text-xs uppercase tracking-wider"
+                    style={{ color: '#F1F5F9' }}
+                  >
                     Chat Forensics
                   </span>
                 </div>
-                <span className="font-mono text-[9px] uppercase px-1.5 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20 font-bold">
+                <span
+                  className="font-mono text-[9px] uppercase px-1.5 py-0.5 rounded font-bold"
+                  style={{
+                    backgroundColor: 'rgba(245, 158, 11, 0.15)',
+                    color: '#FBBF24',
+                    border: '1px solid rgba(245, 158, 11, 0.3)',
+                  }}
+                >
                   {report.caseMetadata.caseNumber}
                 </span>
               </div>
 
               {/* Subjects */}
               <div className="text-center space-y-0.5">
-                <div className="text-[10px] font-mono uppercase tracking-widest text-slate-400">
+                <div
+                  className="text-[10px] font-mono uppercase tracking-widest"
+                  style={{ color: '#94A3B8' }}
+                >
                   Diagnostic Dossier
                 </div>
-                <div className="text-lg font-serif font-bold text-white">
-                  {p1} <span className="text-amber-400 font-sans font-light">&</span> {p2}
+                <div
+                  className="text-lg font-serif font-bold"
+                  style={{ color: '#FFFFFF' }}
+                >
+                  {p1}{' '}
+                  <span style={{ color: '#FBBF24', fontFamily: 'sans-serif', fontWeight: 300 }}>
+                    &
+                  </span>{' '}
+                  {p2}
                 </div>
-                <div className="text-[10px] font-mono text-slate-400">
+                <div className="text-[10px] font-mono" style={{ color: '#94A3B8' }}>
                   {metrics.totalMessages} Messages • {metrics.dateRange.totalDays} Days
                 </div>
               </div>
 
               {/* Verdict */}
-              <div className="p-3.5 rounded-xl bg-obsidian-900/90 border border-amber-500/30 text-center space-y-1 shadow-inner">
-                <div className="text-[9px] font-mono uppercase tracking-wider text-amber-400 font-bold">
+              <div
+                className="p-3.5 rounded-xl text-center space-y-1 shadow-inner"
+                style={{
+                  backgroundColor: '#111827',
+                  border: '1px solid rgba(245, 158, 11, 0.35)',
+                }}
+              >
+                <div
+                  className="text-[9px] font-mono uppercase tracking-wider font-bold"
+                  style={{ color: '#FBBF24' }}
+                >
                   Executive Verdict
                 </div>
-                <div className="text-sm font-serif font-bold text-white leading-snug">
+                <div
+                  className="text-sm font-serif font-bold leading-snug"
+                  style={{ color: '#FFFFFF' }}
+                >
                   "{report.overallVerdict.headline}"
                 </div>
-                <div className="text-[10px] text-slate-400 font-mono">
+                <div className="text-[10px] font-mono" style={{ color: '#94A3B8' }}>
                   {report.overallVerdict.archetypeTitle}
                 </div>
               </div>
 
               {/* Metrics Bar */}
               <div className="grid grid-cols-2 gap-2 text-center">
-                <div className="p-2 rounded-lg bg-obsidian-900 border border-obsidian-800">
-                  <div className="text-[9px] font-mono text-slate-400 uppercase">Initiation Gap</div>
-                  <div className="text-xs font-mono font-bold text-amber-300 mt-0.5">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    backgroundColor: '#111827',
+                    border: '1px solid #1F2937',
+                  }}
+                >
+                  <div
+                    className="text-[9px] font-mono uppercase"
+                    style={{ color: '#94A3B8' }}
+                  >
+                    Initiation Gap
+                  </div>
+                  <div
+                    className="text-xs font-mono font-bold mt-0.5"
+                    style={{ color: '#FCD34D' }}
+                  >
                     {s1.initiationPercentage}% vs {s2.initiationPercentage}%
                   </div>
-                  <div className="text-[9px] text-slate-500 truncate">
+                  <div
+                    className="text-[9px] truncate"
+                    style={{ color: '#64748B' }}
+                  >
                     {s1.initiationPercentage > 50 ? p1 : p2} texts first
                   </div>
                 </div>
-                <div className="p-2 rounded-lg bg-obsidian-900 border border-obsidian-800">
-                  <div className="text-[9px] font-mono text-slate-400 uppercase">Median Latency</div>
-                  <div className="text-xs font-mono font-bold text-amber-300 mt-0.5">
+                <div
+                  className="p-2 rounded-lg"
+                  style={{
+                    backgroundColor: '#111827',
+                    border: '1px solid #1F2937',
+                  }}
+                >
+                  <div
+                    className="text-[9px] font-mono uppercase"
+                    style={{ color: '#94A3B8' }}
+                  >
+                    Median Latency
+                  </div>
+                  <div
+                    className="text-xs font-mono font-bold mt-0.5"
+                    style={{ color: '#FCD34D' }}
+                  >
                     {s1.medianResponseTimeMinutes}m vs {s2.medianResponseTimeMinutes}m
                   </div>
-                  <div className="text-[9px] text-slate-500 truncate">
+                  <div
+                    className="text-[9px] truncate"
+                    style={{ color: '#64748B' }}
+                  >
                     {s1.medianResponseTimeMinutes > s2.medianResponseTimeMinutes ? p1 : p2} replies slower
                   </div>
                 </div>
@@ -314,12 +395,21 @@ export const ExportModal: React.FC<ExportModalProps> = ({
 
               {/* Bottom Line */}
               <div className="text-center px-1">
-                <p className="text-[10px] text-slate-300 italic leading-relaxed">
+                <p
+                  className="text-[10px] italic leading-relaxed"
+                  style={{ color: '#E2E8F0' }}
+                >
                   "{report.actionableAdvice.theBottomLine}"
                 </p>
               </div>
 
-              <div className="text-center pt-2 border-t border-obsidian-800/50 text-[9px] font-mono text-slate-500">
+              <div
+                className="text-center pt-2 text-[9px] font-mono"
+                style={{
+                  borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+                  color: '#64748B',
+                }}
+              >
                 100% Client-Side Privacy • Chat Forensics
               </div>
             </div>
